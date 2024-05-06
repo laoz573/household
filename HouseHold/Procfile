@@ -1,1 +1,1 @@
-web: java -jar target/whousehold.jar
+web: java -jar target/HouseHold.jar
