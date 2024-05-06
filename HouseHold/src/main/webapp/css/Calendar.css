@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+.Calendar {
+	width: 40px;
+	height: 150px;
+	border-collapse: collapse;
+	border-collapse: separate;
+	border-spacing: 20px;
+}
+
+.Calendar th {
+	padding: 0px;
+	border: 0px none;
+}
+
+.Calendar td {
+	padding: 1px 10px;
+	white-space: nowrap;
+}
+
+.Spending {
+	color: orangered;
+	font-size: 12px;
+}
+
+.Income {
+	color: blue;
+	font-size: 12px;
+}
+
+.MonthSpending {
+	color: orangered;
+	font-size: 24px;
+	text-align: center;
+}
+
+.MonthIncome {
+	color: blue;
+	font-size: 24px;
+	text-align: center;
+}
+
+.NextMonth {
+	text-align: right;
+	padding-right: 300px;
+}
+
+.LastMonth {
+	text-align: left;
+	float: left;
+	padding-left: 300px;
+}
+
+.hamburger-menu {
+    cursor: pointer;
+    z-index: 100;
+    position: relative;
+}
+
+.menu-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 99;
+    right: 0; /* メニューを右寄せにしたい場合はこの行を追加 */
+}
+
+.menu-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.menu-content a:hover {
+    background-color: #f1f1f1;
+}

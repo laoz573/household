@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+.content {
+    display: flex;
+}
+
+.item {
+    margin: 5px;
+    border: solid 1px #00ff7f;
+    background-color: #87c3fa;
+}
+
+.Input{
+	margin: 5px;
+    border: solid 1px #00ff7f;
+    background-color: #87c3fa;
+}
+
+.content2 {
+    display: flex;
+}
+
+.Register {
+	text-align:center;
+}
+
+.Content{
+	border-collapse: separate;
+	border-spacing: 20px;
+	}
+
+.YMD{
+	padding-left: 40px;
+}
+
+.test{
+	padding-left: 40px;
+}
+
+.NextDay{
+	text-align: right;
+	padding-right:300px;
+}
+
+.LastDay{
+	text-align: left;
+	float: left;
+	padding-left:300px;
+}
+
+.Reference{
+	text-align: left;
+	padding-left:500px;
+	background-color: skyblue;
+}
+
+.Reference table{
+	border-collapse: separate;
+	border-spacing: 20px;
+}
