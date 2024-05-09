@@ -36,7 +36,8 @@
 								<artifactItem>
 									<groupId>com.heroku</groupId>
 									<artifactId>webapp-runner</artifactId>
-									<version>9.0.30.0</version>
+									<version>10.0.13</version> <!-- Tomcat
+									10に対応した最新のバージョンに更新 -->
 									<destFileName>webapp-runner.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
