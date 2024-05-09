@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import dao.userID;
 import dao.userIDDAO;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -18,57 +17,48 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-public class LoginFilter extends HttpFilter implements Filter {
+public class LoginFilter extends HttpFilter {
     
     public LoginFilter() {
         super();
     }
 
     @Override
-	public void destroy() {
+    public void destroy() {
     }
 
     @Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
         String action = req.getParameter("action");
 
         if ("logout".equals(action)) {
-            // セッションを無効にする
             HttpSession session = req.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
-            // ログインページにリダイレクト
             res.sendRedirect("Login.jsp");
             return;
         }
-    	
-    	
-    	// リクエストのパラメータからユーザーネームとパスワードを取得
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
-        // userIDDAOを使用して認証を行う
         userIDDAO dao = new userIDDAO();
         userID user = dao.findbyUserID(username, password);
 
         if (user != null) {
-            // ユーザーが見つかった場合、セッションにユーザー情報を設定
             HttpSession session = req.getSession();
             int userID = user.getUserID();
             session.setAttribute("userID", userID);
-
-            // YearlyServletにリダイレクト
             res.sendRedirect("YearlyServlet");
         } else {
-            // ユーザーが見つからない場合、ログインページにリダイレクト
-        	res.sendRedirect("Login.jsp"); // ここには適切なログインページのURLを指定してください
+            res.sendRedirect("Login.jsp"); 
         }
     }
+
     @Override
-	public void init(FilterConfig fConfig) throws ServletException {
+    public void init(FilterConfig fConfig) throws ServletException {
     }
 }
