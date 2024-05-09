@@ -11,14 +11,9 @@
     <url-pattern>/RequestRecv</url-pattern>
   </servlet-mapping>
   <display-name>HouseHold</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
+<welcome-file-list>
+    <welcome-file>Login.jsp</welcome-file>
+</welcome-file-list>
   <servlet>
     <description></description>
     <display-name>Test</display-name>
@@ -124,8 +119,8 @@
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>householdservlet.LoginServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>LoginServlet</servlet-name>
+<filter-mapping>
+    <filter-name>LoginFilter</filter-name>
     <url-pattern>/LoginServlet</url-pattern>
-  </servlet-mapping>
+</filter-mapping>
 </web-app>
