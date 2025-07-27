@@ -101,6 +101,9 @@ public class YearlyServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+			request.setCharacterEncoding("UTF-8"); // 文字化け対策
+			
 	      	String postYear = request.getParameter("Year");
 	      	String postmonth = request.getParameter("Month");
 	      	

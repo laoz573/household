@@ -26,7 +26,7 @@ public class RegisterDAO {
 
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 
 	        stmt = con.prepareStatement(sql);
 	        // パラメータの設定
@@ -92,7 +92,7 @@ public class RegisterDAO {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 
 			stmt = con.prepareStatement(sql);
 			// パラメータの設定
@@ -154,7 +154,7 @@ public class RegisterDAO {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 
 			stmt = con.prepareStatement(sql);
 			// パラメータの設定
@@ -216,7 +216,7 @@ public class RegisterDAO {
 	        // JDBCドライバのロード
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 	        // データベース接続
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 	        // SQL実行準備
 	        stmt = con.prepareStatement(sql);
 
@@ -275,7 +275,7 @@ public class RegisterDAO {
 			// JDBCドライバのロード
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			// データベース接続
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 			// SQL実行準備
 			stmt = con.prepareStatement(sql);
 
@@ -323,7 +323,7 @@ public class RegisterDAO {
 			// JDBCドライバのロード
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			// データベース接続
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db", "root", "root12345");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
 			// SQL実行準備
 			stmt = con.prepareStatement(sql);
 

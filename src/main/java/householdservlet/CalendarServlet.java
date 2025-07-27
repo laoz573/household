@@ -19,8 +19,9 @@ public class CalendarServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-    	//ユーザーのIDを取得している
+        request.setCharacterEncoding("UTF-8"); // 文字化け
+    	
+        //ユーザーのIDを取得している
     	HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userID");
     	
