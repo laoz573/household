@@ -19,8 +19,16 @@ public class userIDDAO {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
+			// 環境変数 DB_HOST を取得（なければ localhost）
+            String dbHost = System.getenv("DB_HOST");
+            if (dbHost == null || dbHost.trim().isEmpty()) {
+                dbHost = "localhost";
+            }
 
+            // JDBC接続URLを構築
+            String jdbcUrl = "jdbc:mysql://" + dbHost + ":3306/household_db?useUnicode=true&characterEncoding=UTF-8";
+			// データベース接続
+	        con = DriverManager.getConnection(jdbcUrl, "root", "root12345");
 			stmt = con.prepareStatement(sql);
 			// パラメータの設定
 			stmt.setString(1, username);
@@ -69,9 +77,16 @@ public class userIDDAO {
 	    try {
 	        // JDBCドライバのロード
 	        Class.forName("com.mysql.cj.jdbc.Driver");
-	        // データベース接続
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
-	        // SQL実行準備
+			// 環境変数 DB_HOST を取得（なければ localhost）
+            String dbHost = System.getenv("DB_HOST");
+            if (dbHost == null || dbHost.trim().isEmpty()) {
+                dbHost = "localhost";
+            }
+
+            // JDBC接続URLを構築
+            String jdbcUrl = "jdbc:mysql://" + dbHost + ":3306/household_db?useUnicode=true&characterEncoding=UTF-8";
+			// データベース接続
+	        con = DriverManager.getConnection(jdbcUrl, "root", "root12345");	        // SQL実行準備
 	        stmt = con.prepareStatement(sql);
 
 	        // パラメータの設定
