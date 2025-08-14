@@ -1,3 +1,16 @@
+# MySQL 設定ファイル（bind-address = 0.0.0.0）
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  my.cnf: |
+    [mysqld]
+    bind-address = 0.0.0.0
+
+---
+
+# MySQL Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,16 +33,24 @@ spec:
           value: root12345
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/mysql/conf.d
+      volumes:
+      - name: config-volume
+        configMap:
+          name: mysql-config
+
 ---
+
+# MySQL Service
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql
 spec:
-  type: NodePort
   selector:
     app: mysql
   ports:
   - port: 3306
     targetPort: 3306
-    nodePort: 30306
