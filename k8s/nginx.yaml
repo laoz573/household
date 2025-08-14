@@ -45,9 +45,9 @@ data:
   default.conf: |
     server {
         listen 80;
-        location / {
+        location /Login.jsp {
             proxy_pass http://10.108.223.38:8080; # 家計簿アプリのクラスターIPを入力する
-            proxy_set_header Host 192.168.10.132;　 # 家計簿アプリのIPアドレスを入力する
+            proxy_set_header Host 192.168.10.132; # 家計簿アプリのIPアドレスを入力する
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto http;

@@ -36,10 +36,16 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /etc/mysql/conf.d
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
       volumes:
       - name: config-volume
         configMap:
           name: mysql-config
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+
 
 ---
 

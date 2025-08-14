@@ -26,7 +26,8 @@ kind: Service
 metadata:
   name: household
 spec:
-  type: NodePort
+  type: ClusterIP
+  clusterIP: 10.108.223.38  # 固定したいIPを指定
   selector:
     app: household
   ports:
