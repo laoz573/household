@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: household
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: household
+  template:
+    metadata:
+      labels:
+        app: household
+    spec:
+      containers:
+      - name: household
+        image: ghcr.io/laoz573/household:1.0.2
+        env:
+        - name: DB_HOST
+          value: mysql
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: household
+spec:
+  type: NodePort
+  selector:
+    app: household
+  ports:
+  - port: 8080
+    targetPort: 8080

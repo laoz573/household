@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnsmasq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnsmasq
+  template:
+    metadata:
+      labels:
+        app: dnsmasq
+    spec:
+      hostNetwork: true
+      containers:
+      - name: dnsmasq
+        image: jpillora/dnsmasq
+        args:
+        - --address=/household.home/192.168.10.132
+        - --port=1053
+
+        ports:
+        - containerPort: 1053
+          protocol: UDP
+        securityContext:
+          privileged: true
