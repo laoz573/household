@@ -62,7 +62,7 @@ public class RegisterDAO {
 	    } catch (ClassNotFoundException e) {
 	        System.out.println("JDBCドライバのロードでエラーが発生しました");
 	    } catch (SQLException e) {
-	        System.out.println("データベースへのアクセスでエラーが発生しました。");
+	        System.out.println("データベースへのアクセスでエラーが発生しました。A");
 	    } finally {
 	        try {
 	            if (con != null) {
@@ -101,7 +101,15 @@ public class RegisterDAO {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/household_db?useUnicode=true&characterEncoding=UTF-8", "root", "root12345");
+		 // 環境変数 DB_HOST を取得（なければ localhost）
+            String dbHost = System.getenv("DB_HOST");
+            if (dbHost == null || dbHost.trim().isEmpty()) {
+                dbHost = "localhost";
+            }
+
+            // JDBC接続URLを構築
+            String jdbcUrl = "jdbc:mysql://" + dbHost + ":3306/household_db?useUnicode=true&characterEncoding=UTF-8";
+			con = DriverManager.getConnection(jdbcUrl, "root", "root12345");
 
 			stmt = con.prepareStatement(sql);
 			// パラメータの設定
@@ -128,7 +136,7 @@ public class RegisterDAO {
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。");
+			System.out.println("データベースへのアクセスでエラーが発生しました。B");
 		} finally {
 			try {
 				if (con != null) {
@@ -141,7 +149,7 @@ public class RegisterDAO {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("データベースへのアクセスでエラーが発生しました。");
+				System.out.println("データベースへのアクセスでエラーが発生しました。C");
 			}
 		}
 		return houselist;
@@ -197,7 +205,7 @@ public class RegisterDAO {
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。");
+			System.out.println("データベースへのアクセスでエラーが発生しました。AA");
 		} finally {
 			try {
 				if (con != null) {
@@ -210,7 +218,7 @@ public class RegisterDAO {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("データベースへのアクセスでエラーが発生しました。");
+				System.out.println("データベースへのアクセスでエラーが発生しました。D");
 			}
 		}
 		return houselist;
@@ -335,7 +343,7 @@ public class RegisterDAO {
 					con.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("データベースへのアクセスでエラーが発生しました。");
+				System.out.println("データベースへのアクセスでエラーが発生しました。E");
 			}
 		}
 	}
@@ -387,7 +395,7 @@ public class RegisterDAO {
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。");
+			System.out.println("データベースへのアクセスでエラーが発生しました。F");
 		} finally {
 			try {
 				if (stmt != null) {
