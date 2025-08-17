@@ -19,3 +19,4 @@ RUN curl -fsSL https://get.docker.com | sh
 
 RUN apt update && apt install -y make
 RUN apt update && apt install -y curl
+RUN apt update && apt install -y rsync
