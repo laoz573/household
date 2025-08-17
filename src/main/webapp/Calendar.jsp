@@ -12,6 +12,12 @@ int userId = (int) session.getAttribute("userID");
 SetGetCal sgc =(SetGetCal)request.getAttribute("SetGetCal");
 int year = sgc.getYear();
 int month = sgc.getMonth();
+
+// ログ出力を追加
+System.out.println("JSP: year=" + year + ", month=" + month);
+System.out.println("JSP: income=" + monthlyTotalIncome + ", spending=" + monthlyTotalSpending);
+System.out.println("JSP: userId=" + userId);
+System.out.println("JSP: day=" + day);
 %>
 
 
