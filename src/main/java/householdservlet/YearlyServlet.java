@@ -1,7 +1,9 @@
 package householdservlet;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import dao.HHD;
@@ -29,6 +31,16 @@ public class YearlyServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+	private Map<String, Integer> fetchCategorySpendingFromDBOrLogic() {
+    Map<String, Integer> categorySpending = new HashMap<>();
+    categorySpending.put("食費", 45000);
+    categorySpending.put("日用品", 12000);
+    categorySpending.put("光熱費", 18000);
+    categorySpending.put("交通費", 8000);
+    categorySpending.put("その他", 5000);
+    return categorySpending;
+}
+
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,6 +49,12 @@ public class YearlyServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 	
+		Map<String, Integer> categorySpending = fetchCategorySpendingFromDBOrLogic(); // nullの可能性あり
+		if (categorySpending == null) {
+			categorySpending = new HashMap<>();
+		}
+		request.setAttribute("categorySpending", categorySpending);
+
         // セッションからユーザーIDを取得
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userID");
@@ -71,7 +89,7 @@ public class YearlyServlet extends HttpServlet {
 
 
         for (int month = 1; month <= 12; month++) {
-            List<HHD> monthlyRecords = registerDAO.findByYearMonth(cYear, month , userId);
+            List<HHD> monthlyRecords = registerDAO.findByYearMonth(sgc.getYear(), month , userId);
             int monthlyTotalIncome = 0;
             int monthlyTotalSpending = 0;
 
@@ -158,6 +176,8 @@ public class YearlyServlet extends HttpServlet {
 	            monthlyTotalIncomes[month - 1] = monthlyTotalIncome;
 	            monthlyTotalSpendings[month - 1] = monthlyTotalSpending;
 	        }
+
+
 
 	        request.setAttribute("monthlyTotalIncomes", monthlyTotalIncomes);
 	        request.setAttribute("monthlyTotalSpendings", monthlyTotalSpendings);
