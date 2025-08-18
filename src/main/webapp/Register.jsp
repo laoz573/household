@@ -219,7 +219,7 @@ int date = sgc.getDate(); // 日も取得
 	    	"ePrice": row.querySelector('input[name="Price"]').value,
 	    	"eIncome": row.querySelector('input[name="Income"]').value,
 	    	"eSpending" :row.querySelector('input[name="Spending"]').value,
-			"eCategory": row.querySelector('input[name="Category"]').value,
+			"eCategory": row.querySelector('select[name="Category"]').value,
 	    	"eRemarks": row.querySelector('input[name="Remarks"]').value,
 	    	"Year" :<%=year %>,
 	    	"Month":<%=month %>,
@@ -239,9 +239,9 @@ int date = sgc.getDate(); // 日も取得
 			    var cells = row.getElementsByTagName('td');
 			    
 			    for (var i = 0; i < cells.length - 2; i++) {
-			        var cell = cells[i];
-			        var input = cell.getElementsByTagName('input')[0]; // 入力フィールドを取得
-			        var value = input.value;
+				var cell = cells[i];
+				var input = cell.querySelector('input, select'); // ← input か select を取得
+				var value = input ? input.value : cell.innerText; // ← inputがなければテキストを使う
 			        cell.innerHTML = value; // セルの内容をテキストに戻す
 			    }
 
