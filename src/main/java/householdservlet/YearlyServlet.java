@@ -31,15 +31,6 @@ public class YearlyServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	private Map<String, Integer> fetchCategorySpendingFromDBOrLogic() {
-    Map<String, Integer> categorySpending = new HashMap<>();
-    categorySpending.put("食費", 45000);
-    categorySpending.put("日用品", 12000);
-    categorySpending.put("光熱費", 18000);
-    categorySpending.put("交通費", 8000);
-    categorySpending.put("その他", 5000);
-    return categorySpending;
-}
 
     
 	/**
@@ -47,13 +38,7 @@ public class YearlyServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-	
-		Map<String, Integer> categorySpending = fetchCategorySpendingFromDBOrLogic(); // nullの可能性あり
-		if (categorySpending == null) {
-			categorySpending = new HashMap<>();
-		}
-		request.setAttribute("categorySpending", categorySpending);
+			throws ServletException, IOException {	
 
         // セッションからユーザーIDを取得
         HttpSession session = request.getSession();
@@ -105,10 +90,29 @@ public class YearlyServlet extends HttpServlet {
             monthlyTotalSpendings[month - 1] = monthlyTotalSpending;
         }
 
+	// 月ごとのカテゴリ別支出を計算
+	Map<Integer, Map<String, Integer>> monthlyCategorySpending = new HashMap<>();
+	for (int month = 1; month <= 12; month++) {
+		List<HHD> monthlyRecords = registerDAO.findByYearMonth(sgc.getYear(), month, userId);
+
+		Map<String, Integer> categoryTotals = new HashMap<>();
+
+		for (HHD record : monthlyRecords) {
+			if ("支出".equals(record.getSpending())) {
+				String category = record.getCategory();
+				int price = record.getPrice();
+
+				categoryTotals.put(category, categoryTotals.getOrDefault(category, 0) + price);
+			}
+		}
+		monthlyCategorySpending.put(month, categoryTotals);
+	}
+
         request.setAttribute("monthlyTotalIncomes", monthlyTotalIncomes);
         request.setAttribute("monthlyTotalSpendings", monthlyTotalSpendings);
         request.setAttribute("yearlyTotalIncome", yearlyTotalIncome);
         request.setAttribute("yearlyTotalSpending", yearlyTotalSpending);
+		request.setAttribute("monthlyCategorySpending", monthlyCategorySpending);
         request.setAttribute("SetGetCal", sgc);
 		//フォワード先の指定
 		RequestDispatcher dispatcher =  request.getRequestDispatcher("Yearly.jsp");
@@ -177,12 +181,29 @@ public class YearlyServlet extends HttpServlet {
 	            monthlyTotalSpendings[month - 1] = monthlyTotalSpending;
 	        }
 
+	// 月ごとのカテゴリ別支出を計算
+	Map<Integer, Map<String, Integer>> monthlyCategorySpending = new HashMap<>();
+	for (int month = 1; month <= 12; month++) {
+		List<HHD> monthlyRecords = registerDAO.findByYearMonth(sgc.getYear(), month, userId);
 
+		Map<String, Integer> categoryTotals = new HashMap<>();
+
+		for (HHD record : monthlyRecords) {
+			if ("支出".equals(record.getSpending())) {
+				String category = record.getCategory();
+				int price = record.getPrice();
+
+				categoryTotals.put(category, categoryTotals.getOrDefault(category, 0) + price);
+			}
+		}
+		monthlyCategorySpending.put(month, categoryTotals);
+	}
 
 	        request.setAttribute("monthlyTotalIncomes", monthlyTotalIncomes);
 	        request.setAttribute("monthlyTotalSpendings", monthlyTotalSpendings);
 	        request.setAttribute("yearlyTotalIncome", yearlyTotalIncome);
 	        request.setAttribute("yearlyTotalSpending", yearlyTotalSpending);
+			request.setAttribute("monthlyCategorySpending", monthlyCategorySpending);
 	        request.setAttribute("SetGetCal", sgc);
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("Yearly.jsp");
 	        dispatcher.forward(request, response);

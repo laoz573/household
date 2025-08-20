@@ -14,20 +14,19 @@ int[] monthlyTotalIncomes = (int[]) request.getAttribute("monthlyTotalIncomes");
 int[] monthlyTotalSpendings = (int[]) request.getAttribute("monthlyTotalSpendings");
 
 // カテゴリ別支出データ
-Map<String, Integer> categorySpending = (Map<String, Integer>) request.getAttribute("categorySpending");
+int targetMonth = 8; // 例：8月
+Map<String, Integer> categorySpending = ((Map<Integer, Map<String, Integer>>)request.getAttribute("monthlyCategorySpending")).get(targetMonth);
+
 StringBuilder labels = new StringBuilder("[");
 StringBuilder data = new StringBuilder("[");
 for (Map.Entry<String, Integer> entry : categorySpending.entrySet()) {
     labels.append("\"").append(entry.getKey()).append("\",");
     data.append(entry.getValue()).append(",");
 }
-if (!categorySpending.isEmpty()) {
-    labels.setLength(labels.length() - 1);
-    data.setLength(data.length() - 1);
-}
+labels.setLength(labels.length() - 1); // 最後のカンマ削除
 labels.append("]");
+data.setLength(data.length() - 1);
 data.append("]");
-
 %>
 
 <!DOCTYPE html>
