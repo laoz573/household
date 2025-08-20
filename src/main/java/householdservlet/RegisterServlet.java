@@ -44,6 +44,7 @@ public class RegisterServlet extends HttpServlet {
 		int Price = 0;
 		String Spending = null;
 		String Income = null;
+		String Category = null; 
 		String Remarks = null;
 
 		//編集した後の項目取得のため(update文のため)
@@ -52,6 +53,7 @@ public class RegisterServlet extends HttpServlet {
 		int ePrice = 0;
 		String eSpending = null;
 		String eIncome = null;
+		String eCategory = null;
 		String eRemarks = null;
         
         //insert文のための変数
@@ -60,6 +62,7 @@ public class RegisterServlet extends HttpServlet {
 		Price = Optional.ofNullable(request.getParameter("Price")).map(Integer::parseInt).orElse(0);
 		Spending = request.getParameter("Spending");
 		Income = request.getParameter("Income");
+		Category = request.getParameter("Category"); // カテゴリの取得
 		Remarks = request.getParameter("Remarks");
 
 		//update文のための変数(登録されている内容を編集したときにデータを上書きするために必要)
@@ -68,6 +71,7 @@ public class RegisterServlet extends HttpServlet {
 		ePrice = Optional.ofNullable(request.getParameter("ePrice")).map(Integer::parseInt).orElse(0);
 		eSpending = request.getParameter("eSpending");
 		eIncome = request.getParameter("eIncome");
+		eCategory = request.getParameter("eCategory"); // カテゴリの取得
 		eRemarks = request.getParameter("eRemarks");
         
 		//Calendar.jspおよびRegister.jspからdoPostで送られてきた年月日のSetterおよびGetter
@@ -125,10 +129,10 @@ public class RegisterServlet extends HttpServlet {
 			java.sql.Date csqlDate = new java.sql.Date(parsedDate.getTime());//java.util.Date型からjava.sql.Date型に変換している(getTime()がある理由は、java.sql.Date型の引数として必要であるため、結局時間はリセットされている)
 			
 			//下記の変数はinsertメソッドとdeleteの引数とするため(insertのi、hhdはHHDから),deleteはおまけで使えると分かったから、使っただけ
-			HHD ihhd = new HHD(Id, csqlDate, Contents, Price, Spending, Income, Remarks , userId);
+			HHD ihhd = new HHD(Id, csqlDate, Contents, Price, Spending, Income,  Category, Remarks, userId);
 			
 			//下記の変数はupdateの引数とするため(editのe、hhdはHHDから)
-			HHD ehhd = new HHD(eId, csqlDate, eContents, ePrice, eSpending, eIncome, eRemarks , userId);
+			HHD ehhd = new HHD(eId, csqlDate, eContents, ePrice, eSpending, eIncome, eCategory, eRemarks, userId);
 			
 			//actionによってinsertメソッドかupdateメソッドを判別している（これを書かないと編集したときに登録されることなったため)
 			String action = request.getParameter("action");

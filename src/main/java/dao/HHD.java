@@ -9,10 +9,11 @@ public class HHD  {//HouseHoldDataの略
     private int price;
     private String spending;
     private String income;
+    private String category;
     private String remarks;
     private int userID;
     
-    public HHD(Integer id,Date registerday, String contents,int price,String spending ,String income ,String remarks , int userID) {
+    public HHD(Integer id,Date registerday, String contents,int price,String spending ,String income ,String category, String remarks, int userID) {
         this.id = id;
         this.registerday = registerday;
         this.contents = contents;
@@ -20,6 +21,7 @@ public class HHD  {//HouseHoldDataの略
         this.spending = spending;
         this.income = income;
         this.remarks = remarks;
+        this.category = category;
         this.userID = userID;
     }
     
@@ -50,6 +52,10 @@ public class HHD  {//HouseHoldDataの略
     
     public String getRemarks() {
     	return this.remarks;
+    }
+
+    public String getCategory() {
+    	return this.category;
     }
     
 	public int getUserID() {

@@ -60,7 +60,7 @@ int date = sgc.getDate(); // 日も取得
 			<option value="サブスク">サブスク</option>
 			<option value="その他">その他</option>
 			</select></th>
-        	<th><input type="text" name="Remarks" value="備考を入力" onfocus="clearPlaceholder(this)" onblur="setPlaceholder(this)"></th>
+        	<th><input type="text" name="Remarks" value="" onfocus="clearPlaceholder(this)" onblur="setPlaceholder(this)"></th>
 	</table>
 
 	<p>
@@ -97,7 +97,7 @@ int date = sgc.getDate(); // 日も取得
 				<td><span><%=household.getPrice()%></span></td>
 				<td><span><%=household.getSpending()%></span></td>
 				<td><span><%=household.getIncome()%></span></td>
-				<td><span><%=household.getRemarks()%></span></td>
+				<td><span><%=household.getCategory()%></span></td>
 				<td><span><%=household.getRemarks()%></span></td>
 				<td><button type="button"
 						onclick="editRecord(<%=household.getId()%>)">編集</button></td>
@@ -225,7 +225,9 @@ int date = sgc.getDate(); // 日も取得
 	    	"Month":<%=month %>,
 	    	"Date":<%=date %>,
 	    };
-		    
+		    console.log("保存処理開始: ID=" + id);
+			console.log("保存されるデータ:", data);
+
 		    submitForm("RegisterServlet", data);
 		    
 		 // フォーム送信後にアラートを表示
@@ -283,7 +285,7 @@ int date = sgc.getDate(); // 日も取得
 				        var price = document.querySelector('[name="Price"]').value;
 				        var spending = document.querySelector('[name="Spending"]:checked') ? document.querySelector('[name="Spending"]:checked').value : '';
 				        var income = document.querySelector('[name="Income"]:checked') ? document.querySelector('[name="Income"]:checked').value : '';
-						var category = document.querySelector('[name="Category"]:checked') ? document.querySelector('[name="Category"]:checked').value : '';
+						var category = document.querySelector('[name="category"]').value;
 				        var remarks = document.querySelector('[name="Remarks"]').value;
 
 				        // 隠しフィールドに値を設定
