@@ -129,13 +129,6 @@ public class YearlyServlet extends HttpServlet {
 	      	String postYear = request.getParameter("Year");
 	      	String postmonth = request.getParameter("Month");
 	      	
-	        String username = request.getParameter("username");
-	        String password = request.getParameter("password");
-
-	        // userIDDAOを使用して認証を行う
-	        userIDDAO dao = new userIDDAO();
-	        dao.insertUserID(username, password);
-	      	
 	        // デフォルト値を設定
 	        int cYear = Optional.ofNullable(postYear).map(Integer::parseInt).orElse(java.util.Calendar.getInstance().get(java.util.Calendar.YEAR));
 	        int cMonth = Optional.ofNullable(postmonth).map(Integer::parseInt).orElse(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH));
@@ -198,6 +191,35 @@ public class YearlyServlet extends HttpServlet {
 		}
 		monthlyCategorySpending.put(month, categoryTotals);
 	}
+
+	String action = request.getParameter("action");
+
+		if ("register".equals(action)) {
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+
+			if (username == null || username.trim().isEmpty() ||
+				password == null || password.trim().isEmpty()) {
+				request.setAttribute("error", "ユーザー名またはパスワードが空です");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("Register.jsp");
+				dispatcher.forward(request, response);
+				return;
+			}
+
+			userIDDAO dao = new userIDDAO();
+			boolean success = dao.insertUserID(username, password);
+
+			if (!success) {
+				request.setAttribute("error", "登録に失敗しました。ユーザー名が既に存在している可能性があります。");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("Register.jsp");
+				dispatcher.forward(request, response);
+				return;
+			}
+
+			// 登録成功
+			response.sendRedirect("YearlyServlet");
+			return;
+		}
 
 	        request.setAttribute("monthlyTotalIncomes", monthlyTotalIncomes);
 	        request.setAttribute("monthlyTotalSpendings", monthlyTotalSpendings);

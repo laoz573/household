@@ -14,18 +14,26 @@ int[] monthlyTotalIncomes = (int[]) request.getAttribute("monthlyTotalIncomes");
 int[] monthlyTotalSpendings = (int[]) request.getAttribute("monthlyTotalSpendings");
 
 // カテゴリ別支出データ
-int targetMonth = 8; // 例：8月
+int targetMonth = month; // 例：8月
+System.out.println("Target Month: " + targetMonth);
 Map<String, Integer> categorySpending = ((Map<Integer, Map<String, Integer>>)request.getAttribute("monthlyCategorySpending")).get(targetMonth);
 
 StringBuilder labels = new StringBuilder("[");
 StringBuilder data = new StringBuilder("[");
-for (Map.Entry<String, Integer> entry : categorySpending.entrySet()) {
-    labels.append("\"").append(entry.getKey()).append("\",");
-    data.append(entry.getValue()).append(",");
+
+if (categorySpending == null || categorySpending.isEmpty()) {
+    labels.append("\"データなし\"");
+    data.append("0"); // ダミー値
+} else {
+    for (Map.Entry<String, Integer> entry : categorySpending.entrySet()) {
+        labels.append("\"").append(entry.getKey()).append("\",");
+        data.append(entry.getValue()).append(",");
+    }
+    labels.setLength(labels.length() - 1); // 最後のカンマ削除
+    data.setLength(data.length() - 1);
 }
-labels.setLength(labels.length() - 1); // 最後のカンマ削除
+
 labels.append("]");
-data.setLength(data.length() - 1);
 data.append("]");
 %>
 

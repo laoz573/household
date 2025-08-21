@@ -19,7 +19,7 @@ public class userID {
 		return this.username;
 	}
 	
-	public String password() {
+	public String getPassword() {
 		return this.password;
 	}
 }
