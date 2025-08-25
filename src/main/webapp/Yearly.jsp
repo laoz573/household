@@ -25,13 +25,17 @@ if (categorySpending == null || categorySpending.isEmpty()) {
     labels.append("\"データなし\"");
     data.append("0"); // ダミー値
 } else {
-    for (Map.Entry<String, Integer> entry : categorySpending.entrySet()) {
+    // 金額順に並び替え（降順）
+    List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(categorySpending.entrySet());
+    sortedEntries.sort((a, b) -> b.getValue() - a.getValue());
+
+    for (Map.Entry<String, Integer> entry : sortedEntries) {
         labels.append("\"").append(entry.getKey()).append("\",");
         data.append(entry.getValue()).append(",");
     }
     labels.setLength(labels.length() - 1); // 最後のカンマ削除
     data.setLength(data.length() - 1);
-}
+  }
 
 labels.append("]");
 data.append("]");
@@ -149,6 +153,7 @@ data.append("]");
           ]
         },
         options: {
+          rotation: -Math.PI / 2, // ← ここが追加点
           responsive: true,
           scales: {
             x: { beginAtZero: true, barPercentage: 0.4 },
