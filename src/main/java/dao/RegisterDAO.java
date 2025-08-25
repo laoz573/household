@@ -52,17 +52,18 @@ public class RegisterDAO {
 	            int price = rs.getInt("price");
 	            String spending = rs.getString("spending");
 	            String income = rs.getString("income");
+				String category = rs.getString("category");
 	            String remarks = rs.getString("remarks");
 	            int userid = rs.getInt("userID");
 
-	            HHD hhd = new HHD(id, registerday, contents, price, spending, income, remarks , userid);
+	            HHD hhd = new HHD(id, registerday, contents, price, spending, income,  category, remarks, userid);
 
 	            houselist.add(hhd);
 	        }
 	    } catch (ClassNotFoundException e) {
 	        System.out.println("JDBCドライバのロードでエラーが発生しました");
 	    } catch (SQLException e) {
-	        System.out.println("データベースへのアクセスでエラーが発生しました。A");
+	        System.out.println("データベースへのアクセスでエラーが発生しました。年");
 	    } finally {
 	        try {
 	            if (con != null) {
@@ -126,17 +127,18 @@ public class RegisterDAO {
 				int price = rs.getInt("price");
 				String spending = rs.getString("spending");
 				String income = rs.getString("income");
+				String category = rs.getString("category");
 				String remarks = rs.getString("remarks");
 				int userid = rs.getInt("userID");
 
-				HHD hhd = new HHD(id, registerday, contents, price, spending, income, remarks , userid);
+				HHD hhd = new HHD(id, registerday, contents, price, spending, income, category, remarks, userid);
 
 				houselist.add(hhd);
 			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。B");
+			System.out.println("データベースへのアクセスでエラーが発生しました。年月");
 		} finally {
 			try {
 				if (con != null) {
@@ -195,17 +197,18 @@ public class RegisterDAO {
 				int price = rs.getInt("price");
 				String spending = rs.getString("spending");
 				String income = rs.getString("income");
+				String category = rs.getString("category");
 				String remarks = rs.getString("remarks");
 				int userid = rs.getInt("userID");
 
-				HHD hhd = new HHD(id, registerday, contents, price, spending, income, remarks , userid);
+				HHD hhd = new HHD(id, registerday, contents, price, spending, income, category, remarks, userid);
 
 				houselist.add(hhd);
 			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。AA");
+			System.out.println("データベースへのアクセスでエラーが発生しました。年月日");
 		} finally {
 			try {
 				if (con != null) {
@@ -234,8 +237,8 @@ public class RegisterDAO {
 	    int rowsInserted = 0;
 
 	    // SQL文の作成
-	    String sql = "INSERT INTO household (registerday, contents, price, spending, income, remarks, userID) VALUES "
-	            + "(?, ?, ?, ?, ?, ?, ?)"; // userIDを追加
+	    String sql = "INSERT INTO household (registerday, contents, price, spending, income, category, remarks, userID) VALUES "
+	            + "(?, ?, ?, ?, ?, ?, ?, ?)"; // userIDを追加
 
 	    try {
 	        // JDBCドライバのロード
@@ -258,8 +261,9 @@ public class RegisterDAO {
 	        stmt.setInt(3, hhd.getPrice());
 	        stmt.setString(4, hhd.getSpending());
 	        stmt.setString(5, hhd.getIncome());
-	        stmt.setString(6, hhd.getRemarks());
-	        stmt.setInt(7, hhd.getUserID()); // userIDをセット
+			stmt.setString(6, hhd.getCategory());
+	        stmt.setString(7, hhd.getRemarks());
+	        stmt.setInt(8, hhd.getUserID()); // userIDをセット
 
 	        // インサートのSQL実行    
 	        rowsInserted = stmt.executeUpdate();
@@ -274,7 +278,7 @@ public class RegisterDAO {
 	        System.out.println("JDBCドライバのロードでエラーが発生しました");
 
 	    } catch (SQLException e) {
-	        System.out.println("データベースへのアクセスでエラーが発生。");
+	        System.out.println("インサートに失敗しました。");
 	    } finally {
 	        // リソースのクローズ
 	        if (stmt != null) {
@@ -336,7 +340,7 @@ public class RegisterDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("データベースへのアクセスでエラーが発生。");
+			System.out.println("削除に失敗しました。");
 		} finally {
 			try {
 				if (con != null) {
@@ -357,7 +361,7 @@ public class RegisterDAO {
 		int rowsUpdated = 0;
 
 		// SQL文の作成
-		String sql = "UPDATE household SET registerday = ?, contents = ?, price = ?, spending = ?, income = ?, remarks = ? WHERE id = ?";
+		String sql = "UPDATE household SET registerday = ?, contents = ?, price = ?, spending = ?, income = ?, category = ?, remarks = ?  WHERE id = ?";
 
 		try {
 			// JDBCドライバのロード
@@ -380,8 +384,9 @@ public class RegisterDAO {
 			stmt.setInt(3, hhd.getPrice());
 			stmt.setString(4, hhd.getSpending());
 			stmt.setString(5, hhd.getIncome());
-			stmt.setString(6, hhd.getRemarks());
-			stmt.setInt(7, hhd.getId()); // 更新するレコードのID
+			stmt.setString(6, hhd.getCategory());
+			stmt.setString(7, hhd.getRemarks());
+			stmt.setInt(8, hhd.getId()); // 更新するレコードのID
 
 			// 更新のSQL実行
 			rowsUpdated = stmt.executeUpdate();
@@ -395,7 +400,7 @@ public class RegisterDAO {
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードでエラーが発生しました");
 		} catch (SQLException e) {
-			System.out.println("データベースへのアクセスでエラーが発生しました。F");
+			System.out.println("更新に失敗しました。");
 		} finally {
 			try {
 				if (stmt != null) {

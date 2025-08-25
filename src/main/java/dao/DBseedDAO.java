@@ -39,6 +39,7 @@ public class DBseedDAO {
                 "price INT NOT NULL," +
                 "spending TEXT," +
                 "income TEXT," +
+                "category VARCHAR(255)," +
                 "remarks TEXT NOT NULL," +
                 "userID INT NOT NULL," +
                 "PRIMARY KEY (id)" +

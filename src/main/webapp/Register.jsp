@@ -40,6 +40,7 @@ int date = sgc.getDate(); // 日も取得
 			<th>金額</th>
 			<th>支出</th>
 			<th>収入</th>
+			<th>カテゴリー</th>
 			<th>備考</th>
 		</tr>
 
@@ -50,7 +51,16 @@ int date = sgc.getDate(); // 日も取得
 				onclick="toggleRadio(this);" checked></th>
 			<th><input type="radio" id="income" name="Income" value="収入"
 				onclick="toggleRadio(this);"></th>
-        	<th><input type="text" name="Remarks" value="備考を入力" onfocus="clearPlaceholder(this)" onblur="setPlaceholder(this)"></th>
+			<th><select name="category">
+			<option value="食費">食費</option>
+			<option value="外食費">外食費</option>
+			<option value="日用品">日用品</option>
+			<option value="光熱費">光熱費</option>
+			<option value="通信費">通信費</option>
+			<option value="サブスク">サブスク</option>
+			<option value="その他">その他</option>
+			</select></th>
+        	<th><input type="text" name="Remarks" value="" onfocus="clearPlaceholder(this)" onblur="setPlaceholder(this)"></th>
 	</table>
 
 	<p>
@@ -77,6 +87,7 @@ int date = sgc.getDate(); // 日も取得
 				<th>金額</th>
 				<th>支出</th>
 				<th>収入</th>
+				<th>カテゴリー</th>
 				<th>備考</th>
 				<th>操作</th>
 			</tr>
@@ -86,6 +97,7 @@ int date = sgc.getDate(); // 日も取得
 				<td><span><%=household.getPrice()%></span></td>
 				<td><span><%=household.getSpending()%></span></td>
 				<td><span><%=household.getIncome()%></span></td>
+				<td><span><%=household.getCategory()%></span></td>
 				<td><span><%=household.getRemarks()%></span></td>
 				<td><button type="button"
 						onclick="editRecord(<%=household.getId()%>)">編集</button></td>
@@ -152,12 +164,22 @@ int date = sgc.getDate(); // 日も取得
 	    cells[2].innerHTML = '<input type="radio" id="Espending" name="Spending" value="'+ cells[2].innerText +'" onclick="edittoggleRadio(this);" ' + (originalSpending ? 'checked' : '') + '>';
 	    // 収入
 	    cells[3].innerHTML = '<input type="radio" id="Eincome" name="Income" value="'+ cells[3].innerText +'" onclick="edittoggleRadio(this);" ' + (originalIncome ? 'checked' : '') + '>';
-	    // 備考
-	    cells[4].innerHTML = '<input type="text" name="Remarks" value="' + cells[4].innerText + '">';
+	    // カテゴリー
+	    cells[4].innerHTML = '<select name="Category">' +
+	        '<option value="食費"' + (cells[4].innerText === '食費' ? ' selected' : '') + '>食費</option>' +
+	        '<option value="外食費"' + (cells[4].innerText === '外食費' ? ' selected' : '') + '>外食費</option>' +
+	        '<option value="日用品"' + (cells[4].innerText === '日用品' ? ' selected' : '') + '>日用品</option>' +
+	        '<option value="光熱費"' + (cells[4].innerText === '光熱費' ? ' selected' : '') + '>光熱費</option>' +
+	        '<option value="通信費"' + (cells[4].innerText === '通信費' ? ' selected' : '') + '>通信費</option>' +
+	        '<option value="サブスク"' + (cells[4].innerText === 'サブスク' ? ' selected' : '') + '>サブスク</option>' +
+	        '<option value="その他"' + (cells[4].innerText === 'その他' ? ' selected' : '') + '>その他</option>' +
+	    '</select>';
+		// 備考
+	    cells[5].innerHTML = '<input type="text" name="Remarks" value="' + cells[5].innerText + '">';
 	    
 	    // ボタンのテキストとイベントハンドラを更新
-	   var editButton = cells[5].getElementsByTagName('button')[0];
-	   var backButton = cells[6].getElementsByTagName('button')[0];
+	   var editButton = cells[6].getElementsByTagName('button')[0];
+	   var backButton = cells[7].getElementsByTagName('button')[0];
 	    editButton.innerText = '保存';
 	    backButton.innerText = '編集中止';
 	    backButton.onclick = function() { backTd(id); };
@@ -197,12 +219,15 @@ int date = sgc.getDate(); // 日も取得
 	    	"ePrice": row.querySelector('input[name="Price"]').value,
 	    	"eIncome": row.querySelector('input[name="Income"]').value,
 	    	"eSpending" :row.querySelector('input[name="Spending"]').value,
+			"eCategory": row.querySelector('select[name="Category"]').value,
 	    	"eRemarks": row.querySelector('input[name="Remarks"]').value,
 	    	"Year" :<%=year %>,
 	    	"Month":<%=month %>,
 	    	"Date":<%=date %>,
 	    };
-		    
+		    console.log("保存処理開始: ID=" + id);
+			console.log("保存されるデータ:", data);
+
 		    submitForm("RegisterServlet", data);
 		    
 		 // フォーム送信後にアラートを表示
@@ -216,9 +241,9 @@ int date = sgc.getDate(); // 日も取得
 			    var cells = row.getElementsByTagName('td');
 			    
 			    for (var i = 0; i < cells.length - 2; i++) {
-			        var cell = cells[i];
-			        var input = cell.getElementsByTagName('input')[0]; // 入力フィールドを取得
-			        var value = input.value;
+				var cell = cells[i];
+				var input = cell.querySelector('input, select'); // ← input か select を取得
+				var value = input ? input.value : cell.innerText; // ← inputがなければテキストを使う
 			        cell.innerHTML = value; // セルの内容をテキストに戻す
 			    }
 
@@ -260,6 +285,7 @@ int date = sgc.getDate(); // 日も取得
 				        var price = document.querySelector('[name="Price"]').value;
 				        var spending = document.querySelector('[name="Spending"]:checked') ? document.querySelector('[name="Spending"]:checked').value : '';
 				        var income = document.querySelector('[name="Income"]:checked') ? document.querySelector('[name="Income"]:checked').value : '';
+						var category = document.querySelector('[name="category"]').value;
 				        var remarks = document.querySelector('[name="Remarks"]').value;
 
 				        // 隠しフィールドに値を設定
@@ -269,6 +295,7 @@ int date = sgc.getDate(); // 日も取得
 				            '<input type="hidden" name="Spending" value="' + spending + '">' +
 				            '<input type="hidden" name="Income" value="' + income + '">' +
 				            '<input type="hidden" name="Remarks" value="' + remarks + '">' +
+							'<input type="hidden" name="Category" value="' + category + '">' +
 				            '<input type="hidden" name="Year" value="' + <%=year %> + '">' +
 				            '<input type="hidden" name="Month" value="' + <%=month %> + '">' +
 				            '<input type="hidden" name="Date" value="' + <%=date %> + '">' +

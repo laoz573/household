@@ -66,7 +66,7 @@ public class userIDDAO {
 		return userID;
 	}
 	
-	public void insertUserID(String username, String password) {
+	public boolean insertUserID(String username, String password) {
 	    Connection con = null;
 	    PreparedStatement stmt = null;
 	    int rowsInserted = 0;
@@ -120,6 +120,7 @@ public class userIDDAO {
 	            System.out.println("データベースクローズでエラーが発生しました。");
 	        }
 	    }
+	// 最後に結果を返す
+    return rowsInserted > 0;
 	}
-
 }
