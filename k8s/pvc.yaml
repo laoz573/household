@@ -8,3 +8,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  volumeName: mysql-pv  # PVと明示的に紐付け
+  storageClassName: ""  # ← これを空にする（または削除）

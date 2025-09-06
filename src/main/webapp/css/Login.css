@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@media screen and (min-width: 768px) {
 
 body, html {
   height: 100%;
@@ -9,8 +10,11 @@ body, html {
   font-family: Arial, sans-serif;
 }
 
-.login-container {
-  text-align: center;
+
+#container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
 }
 
 .login-form {
@@ -19,7 +23,7 @@ body, html {
 }
 
 .form-group {
-  margin-bottom: 15px;
+  text-align: center;
 }
 
 label {
@@ -27,22 +31,112 @@ label {
   margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="password"] {
-  width: 100%;
+#username-input,
+#password-input {
+  width: 150px;
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  margin: 10px auto;
+  display: block;
+  box-sizing: border-box;
 }
 
+
 button[type="submit"] {
-  padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #4CAF50; /* 落ち着いたグリーン */
   color: white;
+  padding: 12px 24px;
   border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+}
+/* スマホ向け（幅が767px以下） */
+@media screen and (max-width: 767px) {
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+
+#container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+}
+
+.login-form {
+  display: inline-block;
+  margin: auto;
+}
+
+.form-group {
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#username-input,
+#password-input {
+  width: 150px;
+  padding: 10px;
+  margin: 10px auto;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+button[type="submit"] {
+  background-color: #4CAF50; /* 落ち着いたグリーン */
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
 }
