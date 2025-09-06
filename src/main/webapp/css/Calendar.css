@@ -1,5 +1,18 @@
 @charset "UTF-8";
 
+@media screen and (min-width: 768px) {
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 縦方向中央寄せ（必要なら） */
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* 中央寄せの基本 */
+  padding: 20px;
+}
+
+
 button {
   background-color: #4CAF50; /* 落ち着いたグリーン */
   color: white;
@@ -23,12 +36,23 @@ button:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.YearMonth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 3rem; /* pxよりrem推奨 */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .Calendar {
-	width: 40px;
-	height: 150px;
+	width: 50%;
+	height: 40%;
 	border-collapse: collapse;
 	border-collapse: separate;
 	border-spacing: 20px;
+  margin-bottom: 50px;
 }
 
 .Calendar th {
@@ -41,6 +65,13 @@ button:active {
 	white-space: nowrap;
 }
 
+.Calendar td:hover {
+  background-color: #f0f8ff; /* 薄い青でハイライト */
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
 .Spending {
 	color: orangered;
 	font-size: 12px;
@@ -50,6 +81,7 @@ button:active {
 	color: blue;
 	font-size: 12px;
 }
+
 
 .MonthSpending {
 	color: orangered;
@@ -63,21 +95,237 @@ button:active {
 	text-align: center;
 }
 
-.NextMonth {
-	text-align: right;
-	padding-right: 300px;
+.MonthNavigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.LastMonth {
-	text-align: left;
-	float: left;
-	padding-left: 300px;
-}
 
 .hamburger-menu {
-    cursor: pointer;
-    z-index: 100;
-    position: relative;
+  font-size:20px;
+  width: 70px;
+  height: 22px;
+  position: relative;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px; /* 右にずらす */
+  border-bottom: 6px solid #ccc;
+}
+
+.hamburger-menu:hover {
+  background-color: #eee;
+  border-bottom-color: #4CAF50;
+  transition: all 0.3s ease;
+}
+
+/* ドロップダウンメニュー */
+.menu-content {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 100px;
+  z-index: 99;
+}
+
+.menu-content a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.menu-content a:hover {
+  color: #4CAF50;
+}
+
+
+.menu-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 99;
+    right: 0; /* メニューを右寄せにしたい場合はこの行を追加 */
+}
+
+.menu-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.menu-content a:hover {
+    background-color: #f1f1f1;
+}
+}
+
+@media screen and (max-width: 767px) {
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 縦方向中央寄せ（必要なら） */
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* 中央寄せの基本 */
+  padding: 20px;
+}
+
+
+button {
+  background-color: #4CAF50; /* 落ち着いたグリーン */
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.YearMonth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 3rem; /* pxよりrem推奨 */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.Calendar {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: separate;
+  border-spacing: 3px;
+  margin: 0 auto 50px;
+}
+
+.CalendarWrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.Calendar th {
+	padding: 0px;
+	border: 0px none;
+}
+
+.Calendar td {
+	padding: 1px 5px;
+	white-space: nowrap;
+}
+
+.Calendar td:hover {
+  background-color: #f0f8ff; /* 薄い青でハイライト */
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+.Spending {
+	color: orangered;
+	font-size: 10px;
+}
+
+.Income {
+	color: blue;
+	font-size: 10px;
+}
+
+
+.MonthSpending {
+	color: orangered;
+	font-size: 24px;
+	text-align: center;
+}
+
+.MonthIncome {
+	color: blue;
+	font-size: 24px;
+	text-align: center;
+}
+
+.MonthNavigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
+.hamburger-menu {
+  font-size:20px;
+  width: 70px;
+  height: 22px;
+  position: relative;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px; /* 右にずらす */
+  border-bottom: 6px solid #ccc;
+}
+
+.hamburger-menu:hover {
+  background-color: #eee;
+  border-bottom-color: #4CAF50;
+  transition: all 0.3s ease;
+}
+
+/* ドロップダウンメニュー */
+.menu-content {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 100px;
+  z-index: 99;
+}
+
+.menu-content a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.menu-content a:hover {
+  color: #4CAF50;
 }
 
 .menu-content {
@@ -99,4 +347,5 @@ button:active {
 
 .menu-content a:hover {
     background-color: #f1f1f1;
+}
 }
