@@ -1,3 +1,4 @@
+# household Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,16 +21,18 @@ spec:
           value: mysql
         ports:
         - containerPort: 8080
+
 ---
+
+# household Service
 apiVersion: v1
 kind: Service
 metadata:
   name: household
 spec:
   type: ClusterIP
-  clusterIP: 10.108.223.38  # 固定したいIPを指定
   selector:
     app: household
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080

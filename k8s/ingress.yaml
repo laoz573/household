@@ -1,19 +1,20 @@
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: household-ingress
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   ingressClassName: nginx
-#   rules:
-#   - host: household.home
-#     http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: household
-#             port:
-#               number: 8080
+# household Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: household-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host:  LAPTOP-TVH1SP9T.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: household
+            port:
+              number: 80
