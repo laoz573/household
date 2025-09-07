@@ -343,26 +343,25 @@ int date = sgc.getDate(); // 日も取得
 					}
 					
 					
-					function searchTable() {
-						var search = document.getElementById('searchOption').value;
-						var table = document.getElementById('data-table');
-						var tr = table.getElementsByTagName('tr');
+		function searchTable() {
+		const search = document.getElementById('searchOption').value;
+		const cards = document.querySelectorAll('.record-card');
 
-						for (var i = 1; i < tr.length; i++) { // ヘッダー行を除くすべての行をループ
-							var tdSpending = tr[i].getElementsByTagName('td')[2].innerText; // 支出の列
-							var tdIncome = tr[i].getElementsByTagName('td')[3].innerText; // 収入の列
+		cards.forEach(card => {
+			const spendingText = card.children[2]?.innerText || '';
+			const incomeText = card.children[3]?.innerText || '';
 
-							if (search === 'all') {
-								tr[i].style.display = ""; // 全ての行を表示
-							} else if (search === 'spending' && tdSpending === '支出') {
-								tr[i].style.display = ""; // 支出のみ表示
-							} else if (search === 'income' && tdIncome === '収入') {
-								tr[i].style.display = ""; // 収入のみ表示
-							} else {
-								tr[i].style.display = "none"; // その他の行を非表示
-							}
-						}
-					}
+			if (search === 'all') {
+			card.style.display = '';
+			} else if (search === 'spending' && spendingText === '支出') {
+			card.style.display = '';
+			} else if (search === 'income' && incomeText === '収入') {
+			card.style.display = '';
+			} else {
+			card.style.display = 'none';
+			}
+		});
+		}
 					
 					
 	</script>
