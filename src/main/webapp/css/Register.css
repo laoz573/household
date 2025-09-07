@@ -1,5 +1,53 @@
 @charset "UTF-8";
 
+@media screen and (min-width: 768px) {
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 縦方向中央寄せ（必要なら） */
+  width: 100%;  
+
+}
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+    margin: 0 auto;
+    font-size: 18px;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-row label {
+    flex: 0 0 80px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .form-row input,
+  .form-row select {
+    flex: none; /* ← これで広がらなくなる */
+    width: 80%; /* ← 好きな幅に設定 */
+    padding: 1px;
+    font-size: 14px;
+  }
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
 button {
   background-color: #4CAF50; /* 落ち着いたグリーン */
   color: white;
@@ -11,6 +59,33 @@ button {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.Reference{
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 中央揃え */
+  background-color: skyblue;
+  margin-bottom: 20px;
+  gap: 16px; /* 要素間の余白を追加 */
+}
+
+.Reference button {
+  background-color: #005f99;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.Reference button:hover {
+  background-color: #005f99;
+  transform: translateY(-2px);
 }
 
 button:hover {
@@ -33,15 +108,6 @@ button:active {
     background-color: #87c3fa;
 }
 
-.Input{
-	margin: 5px;
-    border: solid 1px #00ff7f;
-    background-color: #87c3fa;
-}
-
-.content2 {
-    display: flex;
-}
 
 .Register {
 	text-align:center;
@@ -56,28 +122,226 @@ button:active {
 	padding-left: 40px;
 }
 
-.test{
+
+.DayNavigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+ #data-table {
+    display: none; /* テーブルを非表示にする */
+
+  }
+
+  .record-card {
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 14px;
+  max-width: 500px;
+  width: 100%;
+  }
+
+  .record-card div {
+    margin-bottom: 6px;
+  }
+
+  .record-card .actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .record-card button {
+    background-color: #005f99;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 767px) {
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 縦方向中央寄せ（必要なら） */
+  width: 100%;  
+  margin: 0 auto; /* 中央寄せの基本 */
+}
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 10px;
+    margin: 0 auto;
+    font-size: 18px;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .form-row label {
+    flex: 0 0 80px;
+    font-weight: bold;
+  }
+
+  .form-row input,
+  .form-row select {
+    flex: none; /* ← これで広がらなくなる */
+    width: 60%; /* ← 好きな幅に設定 */
+    padding: 1px;
+    font-size: 14px;
+  }
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+button {
+  background-color: #4CAF50; /* 落ち着いたグリーン */
+  color: white;
+  padding: 12px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.Reference button {
+  background-color: #005f99;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.Reference button:hover {
+  background-color: #005f99;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.item {
+    margin: 5px;
+    border: solid 1px #00ff7f;
+    background-color: #87c3fa;
+}
+
+
+.Register {
+	text-align:center;
+}
+
+.Contents input[type="text"],
+.Contents input[type="number"],
+.Contents select {
+  width: 10px;
+}
+
+.Contents input[type="radio"] {
+  margin: 0 6px;
+}
+
+
+.YMD{
 	padding-left: 40px;
 }
 
-.NextDay{
-	text-align: right;
-	padding-right:300px;
-}
-
-.LastDay{
-	text-align: left;
-	float: left;
-	padding-left:300px;
-}
 
 .Reference{
-	text-align: left;
-	padding-left:500px;
-	background-color: skyblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 中央揃え */
+  background-color: skyblue;
+  margin-bottom: 20px;
+  gap: 16px; /* 要素間の余白を追加 */
 }
 
-.Reference table{
-	border-collapse: separate;
-	border-spacing: 20px;
+.DayNavigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+ #data-table {
+    display: none; /* テーブルを非表示にする */
+
+  }
+
+  .record-card {
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 14px;
+  max-width: 500px;
+  width: 100%;
+  }
+
+  .record-card div {
+    margin-bottom: 6px;
+  }
+
+  .record-card .actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .record-card button {
+    background-color: #005f99;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
 }
