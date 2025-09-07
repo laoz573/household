@@ -69,8 +69,8 @@ data.append("]");
           <th>操作</th>
         </tr>
         <tr>
-          <td><%=yearlyTotalIncome%></td>
-          <td><%=yearlyTotalSpending%></td>
+          <td><%=yearlyTotalIncome%>円</td>
+          <td><%=yearlyTotalSpending%>円</td>
                     <td>
             <select id="yearInput" name="Year">
               <script>
