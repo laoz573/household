@@ -25,19 +25,13 @@ System.out.println("JSP: day=" + day);
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>カレンダー</title>
 <link rel="stylesheet" href="./css/Calendar.css">
 </head>
 <body>
+<div class="container">
 
-	<div class="hamburger-menu" onclick="toggleMenu()">
-		☰
-		<div class="menu-content" id="dropdownMenu">
-			<% for (int i = 1; i <= 12; i++) { %>
-			<a href="#" onclick="changeMonth(<%= i %>)"><%= i %>月</a>
-			<% } %>
-		</div>
-	</div>
 
 	<form action="YearlyServlet" method="GET">
 		<p>
@@ -45,10 +39,19 @@ System.out.println("JSP: day=" + day);
 		</p>
 	</form>
 
-	<p><%=year %>年
-	</p>
-	<p><%=month %>月
-	</p>
+		<div class="hamburger-menu" onclick="toggleMenu()">
+		月選択
+		<div class="menu-content" id="dropdownMenu">
+			<% for (int i = 1; i <= 12; i++) { %>
+			<a href="#" onclick="changeMonth(<%= i %>)"><%= i %>月</a>
+			<% } %>
+		</div>
+	</div>
+
+	<div class="YearMonth">
+		<p><%=year %>年</p>
+		<p><%=month %>月</p>
+	</div>
 
 	<p class="MonthIncome">
 		総収入：<%=monthlyTotalIncome %>円
@@ -56,52 +59,41 @@ System.out.println("JSP: day=" + day);
 	<p class="MonthSpending">
 		総支出：<%=monthlyTotalSpending %>円
 	</p>
+	<div class="CalendarWrapper">
+		<table class="Calendar" border="1" table align="center">
+			<tr>
+				<th>日</th>
+				<th>月</th>
+				<th>火</th>
+				<th>水</th>
+				<th>木</th>
+				<th>金</th>
+				<th>土</th>
+			</tr>
 
-	<table class="Calendar" border="1" table align="center">
-		<tr>
-			<th>日</th>
-			<th>月</th>
-			<th>火</th>
-			<th>水</th>
-			<th>木</th>
-			<th>金</th>
-			<th>土</th>
-		</tr>
+			<!-- カレンダーの日付を表示 -->
+			<tr>
+				<%= day.Days(year , month , userId) %>
+			</tr>
 
 
-
-		<tr>
-			<%= day.Days(year , month , userId) %>
-		</tr>
-
-
-	</table>
-
+		</table>
+	</div>
+	<div class="MonthNavigation">
 	<form action="CalendarServlet" method="POST">
-		<p>
-		<div class="LastMonth">
-			<button type="submit">前月</button>
-			<input type="hidden" name="lastmonth" value="前月" />
-		</div>
-		</p>
-
-		<input type="hidden" name="Year" value="<%=year %>" /> 
+		<button type="submit">前月</button>
+		<input type="hidden" name="lastmonth" value="前月" />
+		<input type="hidden" name="Year" value="<%=year %>" />
 		<input type="hidden" name="Month" value="<%=month %>" />
-
 	</form>
 
 	<form action="CalendarServlet" method="POST">
-		<p>
-		<div class="NextMonth">
-			<button type="submit">次月</button>
-			<input type="hidden" name="nextmonth" value="次月" />
-		</div>
-		</p>
-
-		<input type="hidden" name="Year" value="<%=year %>" /> <input
-			type="hidden" name="Month" value="<%=month %>" />
-
+		<button type="submit">次月</button>
+		<input type="hidden" name="nextmonth" value="次月" />
+		<input type="hidden" name="Year" value="<%=year %>" />
+		<input type="hidden" name="Month" value="<%=month %>" />
 	</form>
+	</div>
 
 
 	<script>
@@ -142,7 +134,8 @@ System.out.println("JSP: day=" + day);
 	    var menu = document.getElementById("dropdownMenu");
 	    menu.style.display = "none";
 	}
-    </script>
 
+    </script>
+</div>
 </body>
 </html>
