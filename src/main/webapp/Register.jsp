@@ -36,12 +36,12 @@ int date = sgc.getDate(); // 日も取得
 			<div class="form-section">
 				<div class="form-row">
 					<label for="Contents">登録内容</label>
-					<input type="text" name="Contents" id="Contents" value="内容を入力">
+					<input type="text" name="Contents" id="Contents" value="内容を入力" onfocus="clearPlaceholder(this)"  onblur="setPlaceholder(this)">
 				</div>
 
 				<div class="form-row">
 					<label for="Price">金額</label>
-					<input type="number" name="Price" id="Price" value="0">
+					<input type="number" name="Price" id="Price" value="0" onfocus="clearPlaceholder(this)" onblur="setPlaceholder(this)">
 				</div>
 
 				<div class="form-row">
