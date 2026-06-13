@@ -2,8 +2,6 @@ package householdservlet;
 
 import java.io.IOException;
 
-import dao.userID;
-import dao.userIDDAO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -14,51 +12,45 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- * Servlet Filter implementation class LoginFilter
- */
 public class LoginFilter extends HttpFilter {
-    
-    public LoginFilter() {
-        super();
-    }
 
     @Override
-    public void destroy() {
-    }
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        String action = req.getParameter("action");
+        String path = req.getRequestURI();
 
-        if ("logout".equals(action)) {
-            HttpSession session = req.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            res.sendRedirect("Login.jsp");
+        // ★ API はフィルターを通さない
+        if (path.startsWith("/HouseHold/api/")) {
+            chain.doFilter(request, response);
             return;
         }
-        
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        userIDDAO dao = new userIDDAO();
-        userID user = dao.findbyUserID(username, password);
 
-        if (user != null) {
-            HttpSession session = req.getSession();
-            int userID = user.getUserID();
-            session.setAttribute("userID", userID);
-            res.sendRedirect("YearlyServlet");
-        } else {
-            res.sendRedirect("Login.jsp"); 
+        // ★ ログインページとログイン処理は除外
+        if (path.endsWith("Login.jsp") || path.endsWith("LoginServlet")) {
+            chain.doFilter(request, response);
+            return;
         }
+
+        // ★ セッションチェック
+        HttpSession session = req.getSession(false);
+        if (session != null && session.getAttribute("userID") != null) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // ★ 未ログイン → ログインページへ
+        res.sendRedirect("Login.jsp");
     }
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
+    }
+
+    @Override
+    public void destroy() {
     }
 }
