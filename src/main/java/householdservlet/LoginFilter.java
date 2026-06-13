@@ -30,7 +30,7 @@ public class LoginFilter extends HttpFilter {
         }
 
         // ★ ログインページとログイン処理は除外
-        if (path.endsWith("Login.jsp") || path.endsWith("LoginServlet")) {
+        if (path.endsWith("Login.jsp") || path.endsWith("LoginFilter")) {
             chain.doFilter(request, response);
             return;
         }

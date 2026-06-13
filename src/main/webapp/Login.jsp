@@ -10,7 +10,7 @@
 </head>
 <body>
 <div id="container">
-  <form action="LoginFilter" method="POST" class="login-form">
+  <form action="YearlyServlet" method="POST" class="login-form">
       <div class="form-group">
         <h1>家計簿</h1>
           <div id="username">

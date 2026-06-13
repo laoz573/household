@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー（API版）</title>
+    <link rel="stylesheet" href="./css/Calendar.css">
+</head>
+<body>
+
+    <h1>カレンダー（API版）</h1>
+
+    <div id="info">
+        <p id="year"></p>
+        <p id="month"></p>
+        <p id="income"></p>
+        <p id="spending"></p>
+    </div>
+
+    <!-- 前月・次月ボタン -->
+    <div class="MonthNavigation">
+        <button id="prevMonth">前月</button>
+        <button id="nextMonth">次月</button>
+    </div>
+
+    <table id="calendar" border="1">
+        <!-- JavaScript でカレンダーを描画 -->
+    </table>
+
+    <script>
+        // ★ 現在の年月（初期値）
+        let currentYear = 2026;
+        let currentMonth = 6;
+
+        // ★ カレンダー描画ロジック
+        function renderCalendar(data) {
+            const year = data.year;
+            const month = data.month;
+            const records = data.records;
+
+            const table = document.getElementById("calendar");
+            table.innerHTML = "";
+
+            // 曜日ヘッダー
+            const headerRow = document.createElement("tr");
+            const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
+            weekDays.forEach(day => {
+                const th = document.createElement("th");
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // 月初の曜日
+            const firstDay = new Date(year, month - 1, 1).getDay();
+            // 月末の日付
+            const lastDate = new Date(year, month, 0).getDate();
+
+            let row = document.createElement("tr");
+
+            // 月初まで空白
+            for (let i = 0; i < firstDay; i++) {
+                row.appendChild(document.createElement("td"));
+            }
+
+            // 日付を埋める
+            for (let date = 1; date <= lastDate; date++) {
+                const cell = document.createElement("td");
+
+                // 日付
+                const dayLabel = document.createElement("p");
+                dayLabel.className = "day";
+                dayLabel.textContent = date;
+                cell.appendChild(dayLabel);
+
+                // household のレコード
+                const dailyRecords = records.filter(r => r.date === date);
+
+                let dailyIncome = 0;
+                let dailySpending = 0;
+
+                dailyRecords.forEach(r => {
+                    if (r.income === "収入") dailyIncome += r.price;
+                    if (r.spending === "支出") dailySpending += r.price;
+                });
+
+                // 収入
+                const incomeP = document.createElement("p");
+                incomeP.className = "Income";
+                incomeP.textContent = `収入: ${dailyIncome}円`;
+                cell.appendChild(incomeP);
+
+                // 支出
+                const spendingP = document.createElement("p");
+                spendingP.className = "Spending";
+                spendingP.textContent = `支出: ${dailySpending}円`;
+                cell.appendChild(spendingP);
+
+                // 色付け
+                if (dailyIncome > 0) cell.style.backgroundColor = "#d0f0c0";
+                if (dailySpending > 0) cell.style.backgroundColor = "#f7c6c7";
+
+                // 日付クリック
+                cell.onclick = () => {
+                    alert(`${date}日がクリックされました（後で遷移を実装）`);
+                };
+
+                row.appendChild(cell);
+
+                // 土曜日で改行
+                if ((firstDay + date) % 7 === 0) {
+                    table.appendChild(row);
+                    row = document.createElement("tr");
+                }
+            }
+
+            table.appendChild(row);
+        }
+
+        // ★ API 呼び出し関数
+        function loadCalendar(year, month) {
+            fetch(`/HouseHold/api/calendar?year=${year}&month=${month}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("year").textContent = data.year + "年";
+                    document.getElementById("month").textContent = data.month + "月";
+                    document.getElementById("income").textContent = "総収入：" + data.totalIncome + "円";
+                    document.getElementById("spending").textContent = "総支出：" + data.totalSpending + "円";
+
+                    renderCalendar(data);
+                })
+                .catch(err => console.error("APIエラー:", err));
+        }
+
+        // ★ 前月ボタン
+        document.getElementById("prevMonth").onclick = () => {
+            currentMonth--;
+            if (currentMonth === 0) {
+                currentMonth = 12;
+                currentYear--;
+            }
+            loadCalendar(currentYear, currentMonth);
+        };
+
+        // ★ 次月ボタン
+        document.getElementById("nextMonth").onclick = () => {
+            currentMonth++;
+            if (currentMonth === 13) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            loadCalendar(currentYear, currentMonth);
+        };
+
+        // ★ 初回ロード
+        loadCalendar(currentYear, currentMonth);
+    </script>
+
+</body>
+</html>

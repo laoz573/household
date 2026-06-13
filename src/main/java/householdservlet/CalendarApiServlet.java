@@ -26,12 +26,19 @@ public class CalendarApiServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
 
-        // セッションから userId を取得（JWT 導入前はこれでOK）
-        HttpSession session = request.getSession();
+        // ★ セッションチェック（ログインしていない場合は 401 を返す）
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userID") == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\":\"not logged in\"}");
+            return;
+        }
+
         int userId = (int) session.getAttribute("userID");
 
-        // パラメータ取得（year, month）
+        // ★ パラメータ取得（year, month）
         int year = Optional.ofNullable(request.getParameter("year"))
                 .map(Integer::parseInt)
                 .orElse(java.util.Calendar.getInstance().get(java.util.Calendar.YEAR));
@@ -40,11 +47,11 @@ public class CalendarApiServlet extends HttpServlet {
                 .map(Integer::parseInt)
                 .orElse(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1);
 
-        // DAO 呼び出し
+        // ★ DAO 呼び出し
         RegisterDAO registerDAO = new RegisterDAO();
         List<HHD> monthlyRecords = registerDAO.findByYearMonth(year, month, userId);
 
-        // 月の総収入・総支出を計算
+        // ★ 月の総収入・総支出を計算
         int totalIncome = 0;
         int totalSpending = 0;
 
@@ -56,7 +63,7 @@ public class CalendarApiServlet extends HttpServlet {
             }
         }
 
-        // JSON レスポンス用の Map
+        // ★ JSON レスポンス用の Map
         Map<String, Object> result = new HashMap<>();
         result.put("year", year);
         result.put("month", month);
@@ -64,9 +71,7 @@ public class CalendarApiServlet extends HttpServlet {
         result.put("totalSpending", totalSpending);
         result.put("records", monthlyRecords);
 
-        // JSON を返す
-        response.setContentType("application/json; charset=UTF-8");
-
+        // ★ JSON を返す
         Gson gson = new Gson();
         String json = gson.toJson(result);
 

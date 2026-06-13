@@ -19,9 +19,8 @@
   <!-- LoginFilter の適用範囲（ログイン後の画面だけ） -->
 <filter-mapping>
     <filter-name>LoginFilter</filter-name>
-    <url-pattern>/1CalendarApiServlet</url-pattern>
-  </filter-mapping>
-
+    <url-pattern>/api/*</url-pattern>
+</filter-mapping>
 
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
