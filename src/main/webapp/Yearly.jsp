@@ -59,45 +59,60 @@ data.append("]");
     <h1>家計簿</h1>
     <h2>年間料金</h2>
 
-    <form action="CalendarServlet" method="POST">
-      <table class="selectYearMonth">
-        <tr>
-          <th>年間収入</th>
-          <th>年間支出</th>
-          <th>年選択</th>
-          <th>月選択</th>
-          <th>操作</th>
-        </tr>
-        <tr>
-          <td><%=yearlyTotalIncome%>円</td>
-          <td><%=yearlyTotalSpending%>円</td>
-                    <td>
-            <select id="yearInput" name="Year">
-              <script>
-                var currentYear = <%=year%>;
-                for (var y = 2023; y <= currentYear + 10; y++) {
-                  var selected = y === currentYear ? ' selected' : '';
-                  document.write('<option value="' + y + '"' + selected + '>' + y + '年</option>');
-                }
-              </script>
-            </select>
-          </td>
-          <td>
-            <select id="monthInput" name="Month" required>
-              <script>
-                var currentMonth = <%=month%>;
-                var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-                for (var m = 1; m <= 12; m++) {
-                  var selected = m === currentMonth ? ' selected' : '';
-                  document.write('<option value="' + m + '"' + selected + '>' + monthNames[m - 1] + '</option>');
-                }
-              </script>
-            </select>
-          </td>
-          <td><button type="submit">表示</button></td>
-        </tr>
-      </table>
-    </form>
+<table class="selectYearMonth">
+  <tr>
+    <th>年間収入</th>
+    <th>年間支出</th>
+    <th>年選択</th>
+    <th>月選択</th>
+    <th>操作</th>
+  </tr>
+  <tr>
+    <td><%=yearlyTotalIncome%>円</td>
+    <td><%=yearlyTotalSpending%>円</td>
+    <td>
+        <select id="yearInput" name="Year">
+          <script>
+            var currentYear = <%=year%>;
+            for (var y = 2023; y <= currentYear + 10; y++) {
+              var selected = y === currentYear ? ' selected' : '';
+              document.write('<option value="' + y + '"' + selected + '>' + y + '年</option>');
+            }
+          </script>
+        </select>
+    </td>
+    <td>
+      <select id="monthInput" name="Month" required>
+        <script>
+          var currentMonth = <%=month%>;
+          var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+          for (var m = 1; m <= 12; m++) {
+            var selected = m === currentMonth ? ' selected' : '';
+            document.write('<option value="' + m + '"' + selected + '>' + monthNames[m - 1] + '</option>');
+          }
+        </script>
+      </select>
+    </td>
+    <td>
+      <button type="button" onclick="goCalendar()">表示</button>
+    </td>
+  </tr>
+</table>
+
+    <script>
+    function goCalendar() {
+        const year = document.getElementById("yearInput").value;
+        const month = document.getElementById("monthInput").value;
+
+        if (!year || !month) {
+            alert("年と月を選択してください");
+            return;
+        }
+
+        window.location.href = `Calendar.html`;
+    }
+    </script>
+
 
       <form action="YearlyServlet" method="POST" onsubmit="submitYearMonth()" class="update">
         <input type="hidden" id="yearHidden" name="Year" value="">

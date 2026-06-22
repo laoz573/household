@@ -43,6 +43,8 @@ public class YearlyServlet extends HttpServlet {
         // セッションからユーザーIDを取得
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userID");
+		System.out.println("User ID: " + userId); // デバッグ用にユーザーIDを出力
+
 
         // 変数を定義
         int cYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
