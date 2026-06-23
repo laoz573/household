@@ -66,11 +66,15 @@
 </table>
 
 <script>
-    // URL パラメータ取得
-    const params = new URLSearchParams(window.location.search);
-    let year = parseInt(params.get("year"));
-    let month = parseInt(params.get("month"));
-    let date = parseInt(params.get("date"));
+    // sessionStorage から取得
+    let year = parseInt(sessionStorage.getItem("year"));
+    let month = parseInt(sessionStorage.getItem("month"));
+    let date = parseInt(sessionStorage.getItem("date"));
+
+    // 値がない場合（直接アクセスされた場合）
+    if (!year || !month || !date) {
+        alert("日付情報がありません。カレンダーから遷移してください。");
+    }
 
     // 日付タイトル
     function updateTitle() {

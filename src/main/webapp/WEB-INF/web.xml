@@ -1,57 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
-  <servlet>
-    <display-name>RequestRecv</display-name>
-    <servlet-name>RequestRecv</servlet-name>
-    <servlet-class>helloservlet.RequestRecv</servlet-class>
-  </servlet>
-  <display-name>HouseHold</display-name>
-<welcome-file-list>
-    <welcome-file>Login.jsp</welcome-file>
-</welcome-file-list>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
 
-  <filter>
-    <display-name>LoginFilter</display-name>
-    <filter-name>LoginFilter</filter-name>
-    <filter-class>householdservlet.LoginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>LoginFilter</filter-name>
-    <url-pattern>/LoginFilter</url-pattern>
-  </filter-mapping>
-  <servlet>
-    <description></description>
-    <display-name>LoginServlet</display-name>
-    <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>householdservlet.LoginServlet</servlet-class>
-  </servlet>
+    <welcome-file-list>
+        <welcome-file>Login.html</welcome-file>
+    </welcome-file-list>
 
-  <servlet>
-    <display-name>YearlyServlet</display-name>
-    <servlet-name>YearlyServlet</servlet-name>
-    <servlet-class>householdservlet.YearlyServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>YearlyServlet</servlet-name>
-    <url-pattern>/YearlyServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <display-name>CalendarServlet</display-name>
-    <servlet-name>CalendarServlet</servlet-name>
-    <servlet-class>householdservlet.CalendarServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CalendarServlet</servlet-name>
-    <url-pattern>/CalendarServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>RegisterServlet</display-name>
-    <servlet-name>RegisterServlet</servlet-name>
-    <servlet-class>householdservlet.RegisterServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>RegisterServlet</servlet-name>
-    <url-pattern>/RegisterServlet</url-pattern>
-  </servlet-mapping>
 </web-app>

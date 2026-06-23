@@ -102,7 +102,11 @@
 
                 // 日付クリック
                 cell.onclick = () => {
-                    alert(`${date}日がクリックされました（後で遷移を実装）`);
+                    sessionStorage.setItem("year", currentYear);
+                    sessionStorage.setItem("month", currentMonth);
+                    sessionStorage.setItem("date", date);
+
+                    window.location.href = "Register.html";
                 };
 
                 row.appendChild(cell);
