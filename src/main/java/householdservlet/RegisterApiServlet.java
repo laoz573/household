@@ -44,7 +44,7 @@ public class RegisterApiServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
+        request.setCharacterEncoding("UTF-8");  // ★これが必須！
         response.setContentType("application/json; charset=UTF-8");
 
         HttpSession session = request.getSession(false);
@@ -60,6 +60,7 @@ public class RegisterApiServlet extends HttpServlet {
         int month = Integer.parseInt(request.getParameter("month"));
         int date = Integer.parseInt(request.getParameter("date"));
 
+        request.setCharacterEncoding("UTF-8");
         RegisterDAO dao = new RegisterDAO();
         List<HHD> list = dao.findByYearMonthDate(year, month, date, userId);
 
@@ -72,7 +73,7 @@ public class RegisterApiServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
+        request.setCharacterEncoding("UTF-8");  // ★これが必須！
         response.setContentType("application/json; charset=UTF-8");
 
         HttpSession session = request.getSession(false);
@@ -126,6 +127,7 @@ public class RegisterApiServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        request.setCharacterEncoding("UTF-8");  // ★これが必須！
         response.setContentType("application/json; charset=UTF-8");
 
         HttpSession session = request.getSession(false);
@@ -179,7 +181,7 @@ public class RegisterApiServlet extends HttpServlet {
             throws IOException {
 
         response.setContentType("application/json; charset=UTF-8");
-
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userID") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -11,10 +11,7 @@
 <div class="container">
 
   <!-- ログアウト -->
-  <form action="LoginFilter" method="POST">
-    <input type="hidden" name="action" value="logout">
-    <button type="submit">ログイン画面</button>
-  </form>
+<button onclick="location.href='Login.html'">ログイン画面</button>
 
   <h1>家計簿</h1>
   <h2>年間料金</h2>
@@ -70,26 +67,32 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
   <script>
-    // -----------------------------
-    // 初期設定
-    // -----------------------------
-    const now = new Date();
-    let currentYear = now.getFullYear();
-    let currentMonth = now.getMonth() + 1;
+  // -----------------------------
+  // 初期設定
+  // -----------------------------
+  const now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth() + 1;
+  console.log("currentYear:", currentYear, "currentMonth:", currentMonth);  
+  // 前画面からの値
+  let year = parseInt(sessionStorage.getItem("year"));
+  let month = parseInt(sessionStorage.getItem("month"));
 
-    const yearSelect = document.getElementById("yearInput");
-    const monthSelect = document.getElementById("monthInput");
+  const yearSelect = document.getElementById("yearInput");
+  const monthSelect = document.getElementById("monthInput");
 
-    // 年選択肢を生成
-    for (let y = 2023; y <= currentYear + 10; y++) {
-      const opt = document.createElement("option");
-      opt.value = y;
-      opt.textContent = y + "年";
-      if (y === currentYear) opt.selected = true;
-      yearSelect.appendChild(opt);
-    }
+  // 年選択肢を生成
+  for (let y = 2023; y <= currentYear + 10; y++) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y + "年";
+    yearSelect.appendChild(opt);
+  }
 
-    monthSelect.value = currentMonth;
+  // ★ sessionStorage の値を優先してセット
+  yearSelect.value = year ? currentYear : year;
+  monthSelect.value = month ? currentMonth :month;
+
 
     // -----------------------------
     // API① 年間収支取得
@@ -119,8 +122,9 @@
       fetch(`/api/yearly/category?year=${year}&month=${month}`)
         .then(res => res.json())
         .then(data => {
-          const labels = Object.keys(data.categories);
-          const values = Object.values(data.categories);
+        const categories = data.categories || {};   // ← null 対策
+        const labels = Object.keys(categories);
+        const values = Object.values(categories);
 
           drawPieChart(labels, values);
         });
@@ -210,6 +214,8 @@
     // カレンダーへ遷移
     // -----------------------------
     document.getElementById("goCalendar").onclick = () => {
+      sessionStorage.setItem("year", yearSelect.value);
+      sessionStorage.setItem("month", monthSelect.value);
       window.location.href = "Calendar.html";
     };
 
@@ -227,6 +233,10 @@
     monthSelect.onchange = () => {
       loadCategory();
     };
+
+    document.getElementById("logoutBtn").onclick = () => {
+    window.location.href = "Login.html";
+};
   </script>
 
 </div>

@@ -28,7 +28,7 @@ public class CalendarApiServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        // ★ セッションチェック（ログインしていない場合は 401 を返す）
+        // ★ セッションチェック
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userID") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -47,11 +47,26 @@ public class CalendarApiServlet extends HttpServlet {
                 .map(Integer::parseInt)
                 .orElse(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1);
 
-        // ★ DAO 呼び出し
+        // ★ パラメータ取得（date）→ これがある場合は日別モード
+        String dateParam = request.getParameter("date");
+
         RegisterDAO registerDAO = new RegisterDAO();
+        Gson gson = new Gson();
+
+        // ★ 日別モード（昔の Day.java と同じ動作）
+        if (dateParam != null) {
+            int date = Integer.parseInt(dateParam);
+
+            // DAO は触らず、既存の findByYearMonthDate を使う
+            List<HHD> dailyRecords = registerDAO.findByYearMonthDate(year, month, date, userId);
+
+            response.getWriter().write(gson.toJson(dailyRecords));
+            return;
+        }
+
+        // ★ 月別モード（今まで通り）
         List<HHD> monthlyRecords = registerDAO.findByYearMonth(year, month, userId);
 
-        // ★ 月の総収入・総支出を計算
         int totalIncome = 0;
         int totalSpending = 0;
 
@@ -63,7 +78,6 @@ public class CalendarApiServlet extends HttpServlet {
             }
         }
 
-        // ★ JSON レスポンス用の Map
         Map<String, Object> result = new HashMap<>();
         result.put("year", year);
         result.put("month", month);
@@ -71,10 +85,6 @@ public class CalendarApiServlet extends HttpServlet {
         result.put("totalSpending", totalSpending);
         result.put("records", monthlyRecords);
 
-        // ★ JSON を返す
-        Gson gson = new Gson();
-        String json = gson.toJson(result);
-
-        response.getWriter().write(json);
+        response.getWriter().write(gson.toJson(result));
     }
 }
