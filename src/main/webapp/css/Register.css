@@ -6,7 +6,12 @@
   flex-direction: column;
   justify-content: center; /* 縦方向中央寄せ（必要なら） */
   width: 100%;  
+}
 
+#backToCalendar {
+  align-self: flex-start;
+  display: inline-block;
+  width: auto;
 }
 
   .form-section {
@@ -131,43 +136,45 @@ button:active {
   margin: 0 auto;
 }
 
- #data-table {
-    display: none; /* テーブルを非表示にする */
+/* スマホではテーブルを隠す */
+#recordTable {
+  display: none;
+}
 
-  }
-
-  .record-card {
-  display: inline-block;
-  text-align: center;
-  margin-bottom: 12px;
+/* カード形式の表示 */
+.record-card {
+  display: block;
+  background: #f8f8f8;
+  margin: 12px auto;
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 90%;
+  text-align: center;
   font-size: 14px;
-  max-width: 500px;
-  width: 100%;
-  }
+}
 
-  .record-card div {
-    margin-bottom: 6px;
-  }
+.record-card div {
+  margin-bottom: 6px;
+}
 
-  .record-card .actions {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 8px;
-  }
+.record-card .actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
 
-  .record-card button {
-    background-color: #005f99;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-  }
+.record-card button {
+  background-color: #005f99;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 }
 
 @media screen and (max-width: 767px) {
@@ -178,6 +185,12 @@ button:active {
   justify-content: center; /* 縦方向中央寄せ（必要なら） */
   width: 100%;  
   margin: 0 auto; /* 中央寄せの基本 */
+}
+
+#backToCalendar {
+  align-self: flex-start;
+  display: inline-block;
+  width: auto;
 }
 
   .form-section {
@@ -306,42 +319,44 @@ button:active {
   margin: 0 auto;
 }
 
- #data-table {
-    display: none; /* テーブルを非表示にする */
+/* スマホではテーブルを隠す */
+#recordTable {
+  display: none;
+}
 
-  }
-
-  .record-card {
-  display: inline-block;
-  text-align: center;
-  margin-bottom: 12px;
+/* カード形式の表示 */
+.record-card {
+  display: block;
+  background: #f8f8f8;
+  margin: 12px auto;
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 90%;
+  text-align: center;
   font-size: 14px;
-  max-width: 500px;
-  width: 100%;
-  }
+}
 
-  .record-card div {
-    margin-bottom: 6px;
-  }
+.record-card div {
+  margin-bottom: 6px;
+}
 
-  .record-card .actions {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 8px;
-  }
+.record-card .actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
 
-  .record-card button {
-    background-color: #005f99;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-  }
+.record-card button {
+  background-color: #005f99;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 
 }

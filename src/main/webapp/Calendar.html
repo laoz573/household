@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー</title>
+    <link rel="stylesheet" href="./css/Calendar.css">
+</head>
+<body>
+<div class="container">
+    <button id="backToYearly">年間画面</button>
+    <h1>カレンダー</h1>
+
+    <div class="YearMonth">
+        <p id="year"></p>
+        <p id="month"></p>
+    </div>
+
+    <p class="MonthIncome" id="income"></p>
+    <p class="MonthSpending" id="spending"></p>
+
+    <!-- 前月・次月ボタン -->
+    <div class="MonthNavigation">
+        <button id="prevMonth">前月</button>
+        <button id="nextMonth">次月</button>
+    </div>
+
+    <div class="CalendarWrapper">
+    <table class="calendar" border="1" table align="center">
+        <!-- JavaScript でカレンダーを描画 -->
+    </table>
+    </div>
+
+  <script>
+    const now = new Date();
+    let currentYear = now.getFullYear();
+    let currentMonth = now.getMonth() + 1;
+
+    // 前画面から受け取った年月があれば優先
+    const storedYear = parseInt(sessionStorage.getItem("year"), 10);
+    const storedMonth = parseInt(sessionStorage.getItem("month"), 10);
+    if (!isNaN(storedYear)) currentYear = storedYear;
+    if (!isNaN(storedMonth)) currentMonth = storedMonth;
+
+    // ★ 日別データを API から取得
+    async function fetchDailyData(year, month, date) {
+        const res = await fetch(`/api/calendar?year=${year}&month=${month}&date=${date}`);
+        return await res.json(); // List<HHD>
+    }
+
+    // ★ カレンダー描画
+    async function renderCalendar(data) {
+        const year = data.year;
+        const month = data.month;
+
+        const table = document.querySelector(".calendar");
+        table.innerHTML = "";
+
+        // 曜日ヘッダー
+        const headerRow = document.createElement("tr");
+        ["日", "月", "火", "水", "木", "金", "土"].forEach(day => {
+            const th = document.createElement("th");
+            th.textContent = day;
+            headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        const firstDay = new Date(year, month - 1, 1).getDay();
+        const lastDate = new Date(year, month, 0).getDate();
+
+        let row = document.createElement("tr");
+
+        // 月初の空白
+        for (let i = 0; i < firstDay; i++) {
+            row.appendChild(document.createElement("td"));
+        }
+
+        // ★ 日付ごとに API を呼ぶ
+        for (let date = 1; date <= lastDate; date++) {
+            const cell = document.createElement("td");
+
+            // 日付表示
+            const dayLabel = document.createElement("p");
+            dayLabel.className = "day";
+            dayLabel.textContent = date;
+            cell.appendChild(dayLabel);
+
+            // ★ 日別データ取得
+            const dailyRecords = await fetchDailyData(year, month, date);
+
+            let dailyIncome = 0;
+            let dailySpending = 0;
+
+            dailyRecords.forEach(r => {
+                if (r.income === "収入") dailyIncome += r.price;
+                if (r.spending === "支出") dailySpending += r.price;
+            });
+
+            // 収入
+            const incomeP = document.createElement("p");
+            incomeP.className = "Income";
+            incomeP.textContent = `収入: ${dailyIncome}円`;
+            cell.appendChild(incomeP);
+
+            // 支出
+            const spendingP = document.createElement("p");
+            spendingP.className = "Spending";
+            spendingP.textContent = `支出: ${dailySpending}円`;
+            cell.appendChild(spendingP);
+
+            // 色付け
+            if (dailyIncome > dailySpending) cell.style.backgroundColor = "#d0f0c0";
+            if (dailySpending > dailyIncome) cell.style.backgroundColor = "#f7c6c7";
+
+            // クリックで Register.html へ
+            cell.onclick = () => {
+                sessionStorage.setItem("year", currentYear);
+                sessionStorage.setItem("month", currentMonth);
+                sessionStorage.setItem("date", date);
+                window.location.href = "Register.html";
+            };
+
+            row.appendChild(cell);
+
+            if ((firstDay + date) % 7 === 0) {
+                table.appendChild(row);
+                row = document.createElement("tr");
+            }
+        }
+
+        table.appendChild(row);
+    }
+
+    // ★ 月間データ取得
+    function loadCalendar(year, month) {
+        fetch(`/api/calendar?year=${year}&month=${month}`)
+            .then(res => res.json())
+            .then(async data => {
+                document.getElementById("year").textContent = data.year + "年";
+                document.getElementById("month").textContent = data.month + "月";
+                document.getElementById("income").textContent = "総収入：" + data.totalIncome + "円";
+                document.getElementById("spending").textContent = "総支出：" + data.totalSpending + "円";
+
+                await renderCalendar(data);
+            })
+            .catch(err => console.error("APIエラー:", err));
+    }
+
+    // 前月
+    document.getElementById("prevMonth").onclick = () => {
+        currentMonth--;
+        if (currentMonth === 0) {
+            currentMonth = 12;
+            currentYear--;
+        }
+        loadCalendar(currentYear, currentMonth);
+    };
+
+    // 次月
+    document.getElementById("nextMonth").onclick = () => {
+        currentMonth++;
+        if (currentMonth === 13) {
+            currentMonth = 1;
+            currentYear++;
+        }
+        loadCalendar(currentYear, currentMonth);
+    };
+
+    // 初回ロード
+    loadCalendar(currentYear, currentMonth);
+
+    document.getElementById("backToYearly").onclick = () => {
+        window.location.href = "Yearly.html";
+    };
+</script>
+
+
+</body>
+</html>
+</div>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登録画面</title>
+    <link rel="stylesheet" href="./css/Register.css">
+</head>
+<body>
+<div id="container">
+    <!-- カレンダーへ戻る -->
+    <button id="backToCalendar">カレンダー表示</button>
+
+    <!-- 日付表示 -->
+    <h1 id="dateTitle"></h1>
+    <p class="YMD"></p>
+
+    <!-- 入力フォーム -->
+    <div class="form-section">
+
+        <div class="form-row">
+            <label>登録内容</label>
+            <input type="text" id="contents">
+        </div>
+
+        <div class="form-row">
+            <label>金額</label>
+            <input type="number" id="price">
+        </div>
+
+        <div class="form-row">
+            <label>支出/収入</label>
+            <div class="radio-group">
+                <label><input type="radio" name="type" value="支出" id="spending" checked>支出</label>
+                <label><input type="radio" name="type" value="収入" id="income">収入</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>カテゴリー</label>
+            <select id="category">
+                <option value="食費">食費</option>
+                <option value="外食費">外食費</option>
+                <option value="日用品">日用品</option>
+                <option value="光熱費">光熱費</option>
+                <option value="通信費">通信費</option>
+                <option value="サブスク">サブスク</option>
+                <option value="その他">その他</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>備考</label>
+            <input type="text" id="remarks">
+        </div>
+
+        <div class="Register">
+            <button id="insertBtn">登録</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- 一覧表示 -->
+    <div class="Reference">
+        <h2>登録一覧</h2>
+
+        <table id="recordTable">
+            <tr>
+                <th>内容</th>
+                <th>金額</th>
+                <th>収入/支出</th>
+                <th>カテゴリ</th>
+                <th>備考</th>
+                <th>操作</th>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 前日・翌日 -->
+    <div class="DayNavigation">
+        <button id="prevDay">前日</button>
+        <button id="nextDay">翌日</button>
+    </div>
+    <script>
+    // sessionStorage から取得
+    let year = parseInt(sessionStorage.getItem("year"));
+    let month = parseInt(sessionStorage.getItem("month"));
+    let date = parseInt(sessionStorage.getItem("date"));
+
+    // 値がない場合（直接アクセスされた場合）
+    if (!year || !month || !date) {
+        alert("日付情報がありません。カレンダーから遷移してください。");
+    }
+
+    // 日付タイトル
+    function updateTitle() {
+        document.getElementById("dateTitle").textContent =
+            `${year}年${month}月${date}日の登録`;
+    }
+    updateTitle();
+
+    // -----------------------------
+    // ① 指定日のデータ取得（GET）
+    // -----------------------------
+function loadRecords() {
+    fetch(`/api/record?year=${year}&month=${month}&date=${date}`)
+        .then(res => res.json())
+        .then(list => {
+
+            const table = document.getElementById("recordTable");
+
+            // PC用テーブルのヘッダー以外を削除
+            table.querySelectorAll("tr:not(:first-child)").forEach(tr => tr.remove());
+
+            // スマホ用カードを削除
+            document.querySelectorAll(".record-card").forEach(e => e.remove());
+
+            list.forEach(r => {
+
+                // -------------------------
+                // PC用：テーブル行を生成
+                // -------------------------
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td><input value="${r.contents}" id="c${r.id}"></td>
+                    <td><input value="${r.price}" id="p${r.id}" type="number"></td>
+                    <td>
+                        <select id="t${r.id}">
+                            <option value="収入" ${r.income === "収入" ? "selected" : ""}>収入</option>
+                            <option value="支出" ${r.spending === "支出" ? "selected" : ""}>支出</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="cat${r.id}">
+                            <option value="食費" ${r.category === "食費" ? "selected" : ""}>食費</option>
+                            <option value="外食費" ${r.category === "外食費" ? "selected" : ""}>外食費</option>
+                            <option value="日用品" ${r.category === "日用品" ? "selected" : ""}>日用品</option>
+                            <option value="光熱費" ${r.category === "光熱費" ? "selected" : ""}>光熱費</option>
+                            <option value="通信費" ${r.category === "通信費" ? "selected" : ""}>通信費</option>
+                            <option value="サブスク" ${r.category === "サブスク" ? "selected" : ""}>サブスク</option>
+                            <option value="その他" ${r.category === "その他" ? "selected" : ""}>その他</option>
+                        </select>
+                    </td>
+                    <td><input value="${r.remarks}" id="rm${r.id}"></td>
+                    <td id="btnArea${r.id}"></td>
+                `;
+
+                const btnArea = tr.querySelector(`#btnArea${r.id}`);
+
+                const updateBtn = document.createElement("button");
+                updateBtn.textContent = "更新";
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "削除";
+
+                updateBtn.onclick = () => updateRecord(r.id);
+                deleteBtn.onclick = () => deleteRecord(r.id);
+
+                btnArea.appendChild(updateBtn);
+                btnArea.appendChild(deleteBtn);
+
+                table.appendChild(tr);
+
+                // -------------------------
+                // スマホ用：編集可能カード生成
+                // -------------------------
+                const card = document.createElement("div");
+                card.className = "record-card";
+
+                card.innerHTML = `
+                    <div>内容: <input id="c${r.id}_m" value="${r.contents}"></div>
+                    <div>金額: <input id="p${r.id}_m" type="number" value="${r.price}"></div>
+                    <div>
+                        区分:
+                        <select id="t${r.id}_m">
+                            <option value="支出" ${r.spending === "支出" ? "selected" : ""}>支出</option>
+                            <option value="収入" ${r.income === "収入" ? "selected" : ""}>収入</option>
+                        </select>
+                    </div>
+                    <div>
+                        カテゴリ:
+                        <select id="cat${r.id}_m">
+                            <option value="食費" ${r.category === "食費" ? "selected" : ""}>食費</option>
+                            <option value="外食費" ${r.category === "外食費" ? "selected" : ""}>外食費</option>
+                            <option value="日用品" ${r.category === "日用品" ? "selected" : ""}>日用品</option>
+                            <option value="光熱費" ${r.category === "光熱費" ? "selected" : ""}>光熱費</option>
+                            <option value="通信費" ${r.category === "通信費" ? "selected" : ""}>通信費</option>
+                            <option value="サブスク" ${r.category === "サブスク" ? "selected" : ""}>サブスク</option>
+                            <option value="その他" ${r.category === "その他" ? "selected" : ""}>その他</option>
+                        </select>
+                    </div>
+                    <div>備考: <input id="rm${r.id}_m" value="${r.remarks}"></div>
+
+                    <div class="actions">
+                        <button class="update-btn">更新</button>
+                        <button class="delete-btn">削除</button>
+                    </div>
+                `;
+
+                // スマホ用更新ボタン
+                card.querySelector(".update-btn").onclick = () => {
+                    const data = {
+                        id: r.id,
+                        year,
+                        month,
+                        date,
+                        contents: document.getElementById(`c${r.id}_m`).value,
+                        price: parseInt(document.getElementById(`p${r.id}_m`).value),
+                        income: document.getElementById(`t${r.id}_m`).value === "収入" ? "収入" : "",
+                        spending: document.getElementById(`t${r.id}_m`).value === "支出" ? "支出" : "",
+                        category: document.getElementById(`cat${r.id}_m`).value,
+                        remarks: document.getElementById(`rm${r.id}_m`).value
+                    };
+
+                    fetch("/api/record", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(data)
+                    }).then(() => {
+                        alert("更新しました");
+                        loadRecords();
+                    });
+                };
+
+                // スマホ用削除ボタン
+                card.querySelector(".delete-btn").onclick = () => deleteRecord(r.id);
+
+                const reference = document.querySelector(".Reference");
+                reference.appendChild(card);
+            });
+        });
+}
+
+    loadRecords();
+
+    // -----------------------------
+    // ② 新規登録（POST）
+    // -----------------------------
+    document.getElementById("insertBtn").onclick = () => {
+        const type = document.querySelector("input[name='type']:checked");
+
+        const data = {
+            year: year,
+            month: month,
+            date: date,
+            contents: document.getElementById("contents").value,
+            price: parseInt(document.getElementById("price").value),
+            income: type && type.value === "収入" ? "収入" : "",
+            spending: type && type.value === "支出" ? "支出" : "",
+            category: document.getElementById("category").value,
+            remarks: document.getElementById("remarks").value
+        };
+
+        fetch("/api/record", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        }).then(() => {
+            alert("登録しました");
+            loadRecords();
+        });
+    };
+
+    // -----------------------------
+    // ③ 更新（PUT）
+    // -----------------------------
+    function updateRecord(id) {
+        const data = {
+            id: id,
+            year: year,
+            month: month,
+            date: date,
+            contents: document.getElementById("c" + id).value,
+            price: parseInt(document.getElementById("p" + id).value),
+            income: document.getElementById("t" + id).value === "収入" ? "収入" : "",
+            spending: document.getElementById("t" + id).value === "支出" ? "支出" : "",
+            category: document.getElementById("cat" + id).value,
+            remarks: document.getElementById("rm" + id).value
+        };
+
+        fetch("/api/record", {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        }).then(() => {
+            alert("更新しました");
+            loadRecords();
+        });
+    }
+
+    // -----------------------------
+    // ④ 削除（DELETE）
+    // -----------------------------
+    function deleteRecord(id) {
+        fetch(`/api/record?id=${id}&year=${year}&month=${month}&date=${date}`, {
+            method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(() => {
+            alert("削除しました");
+            loadRecords();
+        });
+    }
+
+    // -----------------------------
+    // ⑤ 前日・翌日
+    // -----------------------------
+    document.getElementById("prevDay").onclick = () => {
+        const d = new Date(year, month - 1, date - 1);
+        year = d.getFullYear();
+        month = d.getMonth() + 1;
+        date = d.getDate();
+        updateTitle();
+        loadRecords();
+    };
+
+    document.getElementById("nextDay").onclick = () => {
+        const d = new Date(year, month - 1, date + 1);
+        year = d.getFullYear();
+        month = d.getMonth() + 1;
+        date = d.getDate();
+        updateTitle();
+        loadRecords();
+    };
+
+    document.getElementById("backToCalendar").onclick = () => {
+        window.location.href = "Calendar.html";
+    };
+    </script>
+</div>
+</body>
+</html>

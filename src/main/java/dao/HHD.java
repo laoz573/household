@@ -61,5 +61,11 @@ public class HHD  {//HouseHoldDataの略
 	public int getUserID() {
 		return this.userID;
 	}
+
+    public int getDate() {
+    java.util.Calendar cal = java.util.Calendar.getInstance();
+    cal.setTime(this.registerday);
+    return cal.get(java.util.Calendar.DAY_OF_MONTH);
+}
 }
 
