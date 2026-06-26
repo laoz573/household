@@ -96,7 +96,7 @@
     // 日付タイトル
     function updateTitle() {
         document.getElementById("dateTitle").textContent =
-            `${year}年${month}月${date}日の登録`;
+            `${year}年${month}月${date}日`;
     }
     updateTitle();
 
@@ -221,6 +221,7 @@ function loadRecords() {
                     }).then(() => {
                         alert("更新しました");
                         loadRecords();
+                        
                     });
                 };
 
@@ -260,6 +261,12 @@ function loadRecords() {
         }).then(() => {
             alert("登録しました");
             loadRecords();
+            // ★ 入力欄クリア
+            document.getElementById("contents").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("spending").checked = true;
+            document.getElementById("category").value = "食費";
+            document.getElementById("remarks").value = "";
         });
     };
 
