@@ -174,43 +174,52 @@
   // -----------------------------
   // 円グラフ描画
   // -----------------------------
-  let pieChart;
-  function drawPieChart(labels, values) {
-    const ctx = document.getElementById("categoryPieChart").getContext("2d");
+ let pieChart;
+function drawPieChart(labels, values) {
+  const ctx = document.getElementById("categoryPieChart").getContext("2d");
 
-    if (pieChart) pieChart.destroy();
+  if (pieChart) pieChart.destroy();
 
-    pieChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: labels.length ? labels : ["データなし"],
-        datasets: [{
-          data: values.length ? values : [0],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.6)",
-            "rgba(54, 162, 235, 0.6)",
-            "rgba(255, 206, 86, 0.6)",
-            "rgba(75, 192, 192, 0.6)",
-            "rgba(153, 102, 255, 0.6)"
-          ]
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "bottom" },
-          datalabels: {
-            color: "#000",
-            formatter: (value, ctx) => {
-              const label = ctx.chart.data.labels[ctx.dataIndex];
-              return label + "\n¥" + value.toLocaleString();
-            }
+  // ▼ labels と values をセットにして降順ソート
+  const sorted = labels
+    .map((label, i) => ({ label, value: values[i] }))
+    .sort((a, b) => b.value - a.value); // ← 高い順
+
+  const sortedLabels = sorted.map(item => item.label);
+  const sortedValues = sorted.map(item => item.value);
+
+  pieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: sortedLabels.length ? sortedLabels : ["データなし"],
+      datasets: [{
+        data: sortedValues.length ? sortedValues : [0],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)"
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" },
+        datalabels: {
+          color: "#000",
+          formatter: (value, ctx) => {
+            const label = ctx.chart.data.labels[ctx.dataIndex];
+            return label + "\n¥" + value.toLocaleString();
           }
         }
-      },
-      plugins: [ChartDataLabels]
-    });
-  }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
 
   // -----------------------------
   // カレンダーへ遷移
