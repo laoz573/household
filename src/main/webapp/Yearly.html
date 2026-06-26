@@ -65,6 +65,18 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
+<h2>新規ユーザー登録</h2>
+
+  <form id="registerForm">
+    <label>ユーザー名:</label>
+    <input type="text" id="regUser" required><br>
+
+    <label>パスワード:</label>
+    <input type="password" id="regPass" required><br>
+
+    <button type="button" id="registerBtn">新規登録</button>
+  </form>
+
   <script>
   // -----------------------------
   // 初期設定
@@ -243,6 +255,25 @@ function drawPieChart(labels, values) {
   };
   monthSelect.onchange = () => {
     loadCategory();
+  };
+
+    document.getElementById("registerBtn").onclick = async () => {
+    const username = document.getElementById("regUser").value;
+    const password = document.getElementById("regPass").value;
+
+    const res = await fetch("/api/user/register", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: `username=${username}&password=${password}`
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("登録しました");
+    } else {
+      alert("エラー: " + data.message);
+    }
   };
   </script>
 
