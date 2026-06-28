@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class userIDDAO {
 	public userID findbyUserID(String username, String password) {
@@ -67,60 +68,76 @@ public class userIDDAO {
 	}
 	
 	public boolean insertUserID(String username, String password) {
-	    Connection con = null;
-	    PreparedStatement stmt = null;
-	    int rowsInserted = 0;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		int rowsInserted = 0;
 
-	    // SQL文の作成
-	    String sql = "INSERT INTO userID (username, password) VALUES (?, ?)";
+		String sql = "INSERT INTO userID (username, password) VALUES (?, ?)";
 
-	    try {
-	        // JDBCドライバのロード
-	        Class.forName("com.mysql.cj.jdbc.Driver");
-			// 環境変数 DB_HOST を取得（なければ localhost）
-            String dbHost = System.getenv("DB_HOST");
-            if (dbHost == null || dbHost.trim().isEmpty()) {
-                dbHost = "localhost";
-            }
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // JDBC接続URLを構築
-            String jdbcUrl = "jdbc:mysql://" + dbHost + ":3306/household_db?useUnicode=true&characterEncoding=UTF-8";
-			// データベース接続
-	        con = DriverManager.getConnection(jdbcUrl, "root", "root12345");	        // SQL実行準備
-	        stmt = con.prepareStatement(sql);
+			String dbHost = System.getenv("DB_HOST");
+			if (dbHost == null || dbHost.trim().isEmpty()) {
+				dbHost = "localhost";
+			}
 
-	        // パラメータの設定
-	        stmt.setString(1, username);
-	        stmt.setString(2, password);
+			String jdbcUrl = "jdbc:mysql://" + dbHost + ":3306/household_db?useUnicode=true&characterEncoding=UTF-8";
 
-	        // インサートのSQL実行
-	        rowsInserted = stmt.executeUpdate();
+			con = DriverManager.getConnection(jdbcUrl, "root", "root12345");
 
-	        if (rowsInserted > 0) {
-	            System.out.println(rowsInserted + " 行が挿入されました。");
-	        } else {
-	            System.out.println("挿入された行はありません。");
-	        }
-	    } catch (ClassNotFoundException e) {
-	        System.out.println("JDBCドライバのロードでエラーが発生しました");
+			// ★ 自動採番された userID を取得するために RETURN_GENERATED_KEYS を使う
+			stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-	    } catch (SQLException e) {
-	        System.out.println("データベースへのアクセスでエラーが発生しました。");
+			stmt.setString(1, username);
+			stmt.setString(2, password);
 
-	    } finally {
-	        // リソースのクローズ
-	        try {
-	            if (stmt != null) {
-	                stmt.close();
-	            }
-	            if (con != null) {
-	                con.close();
-	            }
-	        } catch (SQLException e) {
-	            System.out.println("データベースクローズでエラーが発生しました。");
-	        }
-	    }
-	// 最後に結果を返す
-    return rowsInserted > 0;
+			rowsInserted = stmt.executeUpdate();
+
+			if (rowsInserted == 0) return false;
+
+			// ★ 新規 userID を取得
+			ResultSet rs = stmt.getGeneratedKeys();
+			int newUserId = 0;
+			if (rs.next()) {
+				newUserId = rs.getInt(1);
+			}
+
+			// ★ 初期カテゴリを追加
+			insertDefaultCategories(con, newUserId);
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				if (con != null) con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
+
+	// ★ 初期カテゴリを登録するメソッド
+	private void insertDefaultCategories(Connection con, int userId) {
+		String[] defaults = {"食費", "外食費", "日用品", "光熱費", "通信費", "サブスク", "その他"};
+
+		try {
+			for (String name : defaults) {
+				try (PreparedStatement ps = con.prepareStatement(
+					"INSERT INTO category (userID, name) VALUES (?, ?)")) {
+					ps.setInt(1, userId);
+					ps.setString(2, name);
+					ps.executeUpdate();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

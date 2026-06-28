@@ -29,7 +29,7 @@
   }
 
   .form-row label {
-    flex: 0 0 80px;
+    flex: 0 0 90px;
     font-weight: bold;
     font-size: 14px;
   }
@@ -37,10 +37,15 @@
   .form-row input,
   .form-row select {
     flex: none; /* ← これで広がらなくなる */
-    width: 80%; /* ← 好きな幅に設定 */
+    width: 50%; /* ← 好きな幅に設定 */
     padding: 1px;
     font-size: 14px;
   }
+  .form-row button {
+    padding: 12px 24px; /* 他のボタンと同じ */
+    margin-left: 8px;   /* 押し出しを弱くする */
+    flex-shrink: 0;     /* 押しつぶされないようにする */
+}
 
 .radio-group {
   display: flex;
@@ -64,6 +69,7 @@ button {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 16px;
 }
 
 .Reference{
@@ -222,6 +228,12 @@ button:active {
     font-size: 14px;
   }
 
+  .form-row button {
+  padding: 12px 12px; /* 他のボタンと同じ */
+  margin-left: 8px;   /* 押し出しを弱くする */
+  flex-shrink: 0;     /* 押しつぶされないようにする */
+  }
+
 .radio-group {
   display: flex;
   gap: 12px;
@@ -244,6 +256,7 @@ button {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 10px;
 }
 
 .Reference button {
