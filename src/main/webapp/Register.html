@@ -158,7 +158,8 @@ function loadRecords() {
                 btnArea.appendChild(deleteBtn);
 
                 table.appendChild(tr);
-                
+                // ★ ここでカテゴリを流し込む
+                loadCategoriesForRecord(r.id, r.category, false);
 
                 // -------------------------
                 // スマホ用：編集可能カード生成
@@ -219,6 +220,8 @@ function loadRecords() {
 
                 const reference = document.querySelector(".Reference");
                 reference.appendChild(card);
+                // ★ ここでカテゴリを流し込む
+                loadCategoriesForRecord(r.id, r.category, true);
             });
         });
 }
@@ -264,29 +267,38 @@ function loadRecords() {
     // -----------------------------
     // ③ 更新（PUT）
     // -----------------------------
-    function updateRecord(id) {
-        const data = {
-            id: id,
-            year: year,
-            month: month,
-            date: date,
-            contents: document.getElementById("c" + id).value,
-            price: parseInt(document.getElementById("p" + id).value),
-            income: document.getElementById("t" + id).value === "収入" ? "収入" : "",
-            spending: document.getElementById("t" + id).value === "支出" ? "支出" : "",
-            category: document.getElementById("cat" + id).value,
-            remarks: document.getElementById("rm" + id).value
-        };
+function updateRecord(id, isMobile = false) {
 
-        fetch("/api/record", {
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(data)
-        }).then(() => {
-            alert("更新しました");
-            loadRecords();
-        });
-    }
+    // PC版 → suffix = ""
+    // スマホ版 → suffix = "_m"
+    const suffix = isMobile ? "_m" : "";
+
+    // 区分（収入/支出）
+    const type = document.getElementById(`t${id}${suffix}`).value;
+
+    const data = {
+        id,
+        year,
+        month,
+        date,
+        contents: document.getElementById(`c${id}${suffix}`).value,
+        price: parseInt(document.getElementById(`p${id}${suffix}`).value),
+        income: type === "収入" ? "収入" : "",
+        spending: type === "支出" ? "支出" : "",
+        category: document.getElementById(`cat${id}${suffix}`).value,
+        remarks: document.getElementById(`rm${id}${suffix}`).value
+    };
+
+    fetch("/api/record", {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    }).then(() => {
+        alert("更新しました");
+        loadRecords();
+    });
+}
+
 
     // -----------------------------
     // ④ 削除（DELETE）
@@ -368,6 +380,34 @@ async function loadCategories() {
         });
     });
 }
+
+async function loadCategoriesForRecord(recordId, currentCategory, isMobile = false) {
+    const res = await fetch("/api/category");
+    const list = await res.json();
+
+    const suffix = isMobile ? "_m" : "";
+    const select = document.getElementById(`cat${recordId}${suffix}`);
+    select.innerHTML = "";
+
+    const sorted = list.sort((a, b) => {
+        if (a.name === "その他") return 1;
+        if (b.name === "その他") return -1;
+        return 0;
+    });
+
+    sorted.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat.name;
+        opt.textContent = cat.name;
+
+        if (cat.name === currentCategory) {
+            opt.selected = true;
+        }
+
+        select.appendChild(opt);
+    });
+}
+
 
 document.getElementById("addCategoryBtn").onclick = async () => {
     const name = document.getElementById("categoryAdd").value;
