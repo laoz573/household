@@ -38,15 +38,7 @@
 
         <div class="form-row">
             <label>カテゴリー</label>
-            <select id="category">
-                <option value="食費">食費</option>
-                <option value="外食費">外食費</option>
-                <option value="日用品">日用品</option>
-                <option value="光熱費">光熱費</option>
-                <option value="通信費">通信費</option>
-                <option value="サブスク">サブスク</option>
-                <option value="その他">その他</option>
-            </select>
+            <select id="category"></select>
         </div>
 
         <div class="form-row">
@@ -57,9 +49,21 @@
         <div class="Register">
             <button id="insertBtn">登録</button>
         </div>
+
+        <h3>カテゴリ管理</h3>
+        <div class="form-row">
+            <label>カテゴリ追加</label>
+            <input type="text" id="categoryAdd">
+            <button id="addCategoryBtn">追加</button>
+        </div>
+
+        <div class="form-row">
+            <label>カテゴリ削除</label>
+            <select id="categoryDelete"></select>
+            <button id="deleteCategoryBtn">削除</button>
+        </div>
     </div>
 
-    <hr>
 
     <!-- 一覧表示 -->
     <div class="Reference">
@@ -133,15 +137,7 @@ function loadRecords() {
                         </select>
                     </td>
                     <td>
-                        <select id="cat${r.id}">
-                            <option value="食費" ${r.category === "食費" ? "selected" : ""}>食費</option>
-                            <option value="外食費" ${r.category === "外食費" ? "selected" : ""}>外食費</option>
-                            <option value="日用品" ${r.category === "日用品" ? "selected" : ""}>日用品</option>
-                            <option value="光熱費" ${r.category === "光熱費" ? "selected" : ""}>光熱費</option>
-                            <option value="通信費" ${r.category === "通信費" ? "selected" : ""}>通信費</option>
-                            <option value="サブスク" ${r.category === "サブスク" ? "selected" : ""}>サブスク</option>
-                            <option value="その他" ${r.category === "その他" ? "selected" : ""}>その他</option>
-                        </select>
+                        <select id="cat${r.id}"></select>
                     </td>
                     <td><input value="${r.remarks}" id="rm${r.id}"></td>
                     <td id="btnArea${r.id}"></td>
@@ -162,6 +158,7 @@ function loadRecords() {
                 btnArea.appendChild(deleteBtn);
 
                 table.appendChild(tr);
+                
 
                 // -------------------------
                 // スマホ用：編集可能カード生成
@@ -181,15 +178,7 @@ function loadRecords() {
                     </div>
                     <div>
                         カテゴリ:
-                        <select id="cat${r.id}_m">
-                            <option value="食費" ${r.category === "食費" ? "selected" : ""}>食費</option>
-                            <option value="外食費" ${r.category === "外食費" ? "selected" : ""}>外食費</option>
-                            <option value="日用品" ${r.category === "日用品" ? "selected" : ""}>日用品</option>
-                            <option value="光熱費" ${r.category === "光熱費" ? "selected" : ""}>光熱費</option>
-                            <option value="通信費" ${r.category === "通信費" ? "selected" : ""}>通信費</option>
-                            <option value="サブスク" ${r.category === "サブスク" ? "selected" : ""}>サブスク</option>
-                            <option value="その他" ${r.category === "その他" ? "selected" : ""}>その他</option>
-                        </select>
+                        <select id="cat${r.id}_m"></select>
                     </div>
                     <div>備考: <input id="rm${r.id}_m" value="${r.remarks}"></div>
 
@@ -267,6 +256,8 @@ function loadRecords() {
             document.getElementById("spending").checked = true;
             document.getElementById("category").value = "食費";
             document.getElementById("remarks").value = "";
+            document.getElementById("categoryAdd").value = "";
+            document.getElementById("categoryDelete").value = "";
         });
     };
 
@@ -335,6 +326,96 @@ function loadRecords() {
     document.getElementById("backToCalendar").onclick = () => {
         window.location.href = "Calendar.html";
     };
+
+async function loadCategories() {
+    const res = await fetch("/api/category");
+    const list = await res.json();
+
+    const select = document.getElementById("category");
+    const selectDelete = document.getElementById("categoryDelete");
+    const select_m = document.querySelectorAll("[id^='cat'][id$='_m']"); // スマホ用の select 要素も取得
+
+    // 初期化
+    select.innerHTML = "";
+    selectDelete.innerHTML = "";
+
+    // ★ その他を最後に回す
+    const sorted = list.sort((a, b) => {
+        if (a.name === "その他") return 1;
+        if (b.name === "その他") return -1;
+        return 0;
+    });
+
+    sorted.forEach(cat => {
+        // 登録の選択用
+        const opt = document.createElement("option");
+        opt.value = cat.name;
+        opt.textContent = cat.name;
+        select.appendChild(opt);
+
+        // 削除用（id）
+        const optDelete = document.createElement("option");
+        optDelete.value = cat.id;
+        optDelete.textContent = cat.name;
+        selectDelete.appendChild(optDelete);
+
+        // スマホ用の選択用
+        select_m.forEach(select => {
+            const opt = document.createElement("option");
+            opt.value = cat.name;
+            opt.textContent = cat.name;
+            select.appendChild(opt);
+        });
+    });
+}
+
+document.getElementById("addCategoryBtn").onclick = async () => {
+    const name = document.getElementById("categoryAdd").value;
+
+    const res = await fetch("/api/category", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ name })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        alert("カテゴリを追加しました");
+        loadCategories();
+    } else {
+        alert("追加に失敗しました: " + data.message);
+    }
+};
+
+// ★ カテゴリ削除処理
+document.getElementById("deleteCategoryBtn").onclick = async () => {
+    const select = document.getElementById("categoryDelete");
+    const categoryId = select.value;
+
+    if (!categoryId) {
+        alert("削除するカテゴリを選択してください");
+        return;
+    }
+
+    const res = await fetch(`/api/category?id=${categoryId}`, {
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        alert("カテゴリを削除しました");
+        loadCategories(); // ← select を更新
+    } else {
+        alert("削除に失敗しました: " + data.message);
+    }
+};
+
+// ページ読み込み時にカテゴリ一覧を読み込む
+window.onload = () => {
+    loadCategories();
+};
     </script>
 </div>
 </body>

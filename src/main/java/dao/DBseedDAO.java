@@ -56,10 +56,29 @@ public class DBseedDAO {
                 ") DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
             );
 
-            // 初期ユーザー挿入（重複しない場合のみ）
+            // category テーブル作成
             stmt.executeUpdate(
-                "INSERT IGNORE INTO household_db.userID (userID, username, password) VALUES (1, 'masaya', '3939')"
+                "CREATE TABLE IF NOT EXISTS household_db.category (" +
+                "id INT NOT NULL AUTO_INCREMENT," +
+                "userID INT NOT NULL," +
+                "name VARCHAR(255) NOT NULL," +
+                "PRIMARY KEY (id)," +
+                "UNIQUE KEY unique_user_category (userID, name)" +   // ★追加
+                ") DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
             );
+
+
+            // 初期ユーザー挿入（重複しない場合のみ）
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.userID (userID, username, password) VALUES (1, 'masaya', '3939')");
+            // 初期カテゴリ（userID=1 用）
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, '食費')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, '外食費')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, '日用品')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, '光熱費')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, '通信費')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, 'サブスク')");
+            stmt.executeUpdate("INSERT IGNORE INTO household_db.category (userID, name) VALUES (1, 'その他')");
+
 
             System.out.println("✅ DB初期化完了");
 
