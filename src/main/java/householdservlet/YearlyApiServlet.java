@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import dao.HHD;
+import model.HHD;
 import dao.RegisterDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import dao.HHD;
+import model.HHD;
 import dao.RegisterDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

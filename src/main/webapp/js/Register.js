@@ -51,6 +51,8 @@ function loadRecords() {
                         <select id="cat${r.id}"></select>
                     </td>
                     <td><input value="${r.remarks}" id="rm${r.id}"></td>
+                    <td><input type="date" id="d${r.id}" value="${r.year}-${String(r.month).padStart(2,'0')}-${String(r.date).padStart(2,'0')}"></td>
+
                     <td id="btnArea${r.id}"></td>
                 `;
 
@@ -93,6 +95,8 @@ function loadRecords() {
                         <select id="cat${r.id}_m"></select>
                     </div>
                     <div>備考: <input id="rm${r.id}_m" value="${r.remarks}"></div>
+                    <div>日付: <input type="date" id="d${r.id}_m" value="${r.year}-${String(r.month).padStart(2,'0')}-${String(r.date).padStart(2,'0')}"></div>
+
 
                     <div class="actions">
                         <button class="update-btn">更新</button>
@@ -101,30 +105,7 @@ function loadRecords() {
                 `;
 
                 // スマホ用更新ボタン
-                card.querySelector(".update-btn").onclick = () => {
-                    const data = {
-                        id: r.id,
-                        year,
-                        month,
-                        date,
-                        contents: document.getElementById(`c${r.id}_m`).value,
-                        price: parseInt(document.getElementById(`p${r.id}_m`).value),
-                        income: document.getElementById(`t${r.id}_m`).value === "収入" ? "収入" : "",
-                        spending: document.getElementById(`t${r.id}_m`).value === "支出" ? "支出" : "",
-                        category: document.getElementById(`cat${r.id}_m`).value,
-                        remarks: document.getElementById(`rm${r.id}_m`).value
-                    };
-
-                    fetch("/api/record", {
-                        method: "PUT",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify(data)
-                    }).then(() => {
-                        alert("更新しました");
-                        loadRecords();
-                        
-                    });
-                };
+                card.querySelector(".update-btn").onclick = () => updateRecord(r.id, true);
 
                 // スマホ用削除ボタン
                 card.querySelector(".delete-btn").onclick = () => deleteRecord(r.id);
@@ -179,19 +160,19 @@ function loadRecords() {
     // ③ 更新（PUT）
     // -----------------------------
 function updateRecord(id, isMobile = false) {
-
-    // PC版 → suffix = ""
-    // スマホ版 → suffix = "_m"
     const suffix = isMobile ? "_m" : "";
 
-    // 区分（収入/支出）
     const type = document.getElementById(`t${id}${suffix}`).value;
+
+    // ★ 日付 input の値を取得（yyyy-mm-dd）
+    const dateStr = document.getElementById(`d${id}${suffix}`).value;
+    const [newYear, newMonth, newDate] = dateStr.split("-").map(Number);
 
     const data = {
         id,
-        year,
-        month,
-        date,
+        year: newYear,
+        month: newMonth,
+        date: newDate,
         contents: document.getElementById(`c${id}${suffix}`).value,
         price: parseInt(document.getElementById(`p${id}${suffix}`).value),
         income: type === "収入" ? "収入" : "",
@@ -206,9 +187,12 @@ function updateRecord(id, isMobile = false) {
         body: JSON.stringify(data)
     }).then(() => {
         alert("更新しました");
+
+        updateTitle();
         loadRecords();
     });
 }
+
 
 
     // -----------------------------

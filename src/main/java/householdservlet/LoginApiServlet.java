@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.annotation.WebServlet;
 import dao.userIDDAO;
-import dao.userID;
+import model.userID;
 
 @WebServlet("/login")
 public class LoginApiServlet extends HttpServlet {
