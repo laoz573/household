@@ -1,6 +1,7 @@
-package dao;
+package model;
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class HHD  {//HouseHoldDataの略
     private Integer id;
@@ -12,6 +13,9 @@ public class HHD  {//HouseHoldDataの略
     private String category;
     private String remarks;
     private int userID;
+    private int year;
+    private int month;
+    private int date;
     
     public HHD(Integer id,Date registerday, String contents,int price,String spending ,String income ,String category, String remarks, int userID) {
         this.id = id;
@@ -23,6 +27,9 @@ public class HHD  {//HouseHoldDataの略
         this.remarks = remarks;
         this.category = category;
         this.userID = userID;
+        this.year = registerday.getYear() + 1900;
+        this.month = registerday.getMonth() + 1;
+        this.date = registerday.getDate();
     }
     
     public int getId() {
@@ -61,5 +68,17 @@ public class HHD  {//HouseHoldDataの略
 	public int getUserID() {
 		return this.userID;
 	}
+
+    public int getYear() { 
+        return this.year; 
+    }
+    
+    public int getMonth() { 
+        return this.month; 
+    }
+    
+    public int getDate() { 
+        return this.date; 
+    }
 }
 
